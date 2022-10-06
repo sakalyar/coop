@@ -1,0 +1,15 @@
+Lors de l'execution de l'appel "fork", on crée le oricessus parrallèle, 
+qui ne coincide pas avec le processus de fils (voir a partir d'exo 2) 
+
+
+Montrer que le fils a recopié mais pas l'access
+la declarer la initialiser
+ensuite en faisant le fork on trouve le meme valeur
+on les affiche 
+
+creer variable -> donner la valeur -> ils ont recuperer la meme valeur. 
+Ensuite pere et fils modifie la valeur d'une facon differente. 
+Donc les variables seront differentes.
+Donc il n y a pas d'incidence car les valeurs ne sont pas des memes
+Il faut montrer les choses differentes
+Chaque fois qu'on execute le code, le resultat est diffrent

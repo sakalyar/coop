@@ -1,0 +1,2 @@
+https://medium.com/@kenneth.ca95/how-to-create-a-dynamic-library-in-c-baa473148d00
+https://dev.to/iamkhalil42/all-you-need-to-know-about-c-static-libraries-1o0b
