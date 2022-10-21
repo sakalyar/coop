@@ -58,7 +58,7 @@ int main (int argc, char * argv[]){
 	struct donnee_t x;
 	x.v2 = atoi(argv[1]);
 	x.v1 = atoi(argv[2]);
-	//C(7,5)
+	//C(x.v2,x.v1)
 	
 	if( x.v1 != 0 && x.v2!=0){
 		rec(x);
