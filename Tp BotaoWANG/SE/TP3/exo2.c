@@ -64,7 +64,7 @@ int main (int argc, char * argv[]){
 		rec(x);
 	}
 	
-	for( int j = 0; j < 999 ; j++)
+	for( int j = 0; j < i ; j++)
 		pthread_join(th[j],NULL);
 		
 	printf("C(%d,%d) = %d\n",atoi(argv[1]),atoi(argv[2]), reponse);
