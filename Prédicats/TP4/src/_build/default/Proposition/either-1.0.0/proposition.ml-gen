@@ -1,0 +1,14 @@
+(** @canonical Proposition.Formule *)
+module Formule = Proposition__Formule
+
+
+(** @canonical Proposition.IsoCurryHoward *)
+module IsoCurryHoward = Proposition__IsoCurryHoward
+
+
+(** @canonical Proposition.Quine *)
+module Quine = Proposition__Quine
+
+
+(** @canonical Proposition.Resolution *)
+module Resolution = Proposition__Resolution
