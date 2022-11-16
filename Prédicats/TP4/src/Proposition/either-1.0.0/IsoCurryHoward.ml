@@ -41,8 +41,8 @@ let et_elim_d : 'a * 'b -> 'b = fun x -> snd x
 let non_contra' : 'a * ('a -> bot) -> bot =
  fun a_et_non_a -> imp_elim (et_elim_d a_et_non_a, et_elim_g a_et_non_a)*)
 
-(*let f1 : 'a -> 'a = fun a -> a*)
-										
+let f1 : 'a -> 'a = fun a -> a
+(*let f2 : ('a non, 'b) ou * 'a -> 'b = fun _ -> failwith "à faire"*)						
 let f3 : ('a, 'b) ou -> ('b, 'a) ou = fun _ -> failwith "à faire"
 let f4 : 'a * 'b -> 'b * 'a = fun _ -> failwith "à faire"
 let f5 : 'a * 'b -> ('a, 'b) ou = fun _ -> failwith "à faire"

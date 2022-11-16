@@ -3,7 +3,7 @@
 # Shared cache: disabled
 # Workspace root: "/home/l3info/sakalyar/TP univ Rouen/Predicats/TP4/src"
 # Auto-detected concurrency: 16
-$ /opt/opam/4.14.0/bin/ocamlc.opt -config > /tmp/dune_7b864b_output
+$ /opt/opam/4.14.0/bin/ocamlc.opt -config > /tmp/dune_24390f_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -115,9 +115,8 @@ $ /opt/opam/4.14.0/bin/ocamlc.opt -config > /tmp/dune_7b864b_output
 #      }
 #  }
 $ (cd _build/default && /opt/opam/4.14.0/bin/ocamldep.opt -modules -impl Proposition/either-1.0.0/Resolution.ml) > _build/default/Proposition/either-1.0.0/.Proposition.objs/Resolution.ml.d
-$ (cd _build/default && /opt/opam/4.14.0/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I Proposition/either-1.0.0/.Proposition.objs/byte -no-alias-deps -opaque -open Proposition -o Proposition/either-1.0.0/.Proposition.objs/byte/proposition__Resolution.cmo -c -impl Proposition/either-1.0.0/Resolution.ml)
-> File "Proposition/either-1.0.0/Resolution.ml", line 98, characters 21-33:
-> 98 |     (formule_to_fcc (descente_non (retrait_operateurs f)))
->                           ^^^^^^^^^^^^
-> Error: Unbound value descente_non
+> File "Proposition/either-1.0.0/Resolution.ml", line 98, characters 8-9:
+> 98 | 		union (remove a c1) (remove(Non(a)) c2)
+>      		      ^
+> Error: Syntax error
 [2]

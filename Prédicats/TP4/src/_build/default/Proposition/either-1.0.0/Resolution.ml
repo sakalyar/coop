@@ -51,14 +51,41 @@ let rec retrait_operateurs = function f ->
 (** Mise en FCC, étape 2 : Descend les négations dans une formule au plus profond de l'arbre syntaxique,
     en préservant les évaluations. *)
 
+let rec descente_non = function f -> 
+	match f with
+		 | Non(Ou(a, b)) -> Et(descente_non(Non(a)), descente_non(Non(b)))
+		 | Non(Et(a, b)) -> Ou(Non(descente_non(Non(a))), descente_non(Non(b)))
+		 | Non(Non(a)) -> descente_non(a)
+		 | Non(Bot) -> Top
+		 | Non(Top) -> Bot
+		 | Et(a, b) -> Et(descente_non(a), descente_non(b))
+		 | f -> f
+
 
 (** Calcule la conjonction de deux formes clausales. *)
-let fcc_conj : forme_clausale -> forme_clausale -> forme_clausale =
- fun _ _ -> failwith "à faire"
+(*
+let rec fcc_conj a b = function
+	| Et(a, b)
+*)
+(*let rec fcc_conj a b = function f -> 
+	match f with
+		| fcc_conj(a, b) -> Et(fcc_conj(a), fcc_conj(b))
+		| Imp(a, b) -> Ou(non(a), b)*)
+
+let rec fcc_conj a b = function f -> 
+	match f with
+	
+		| Imp(a, b) -> Ou(Non(a), b)
 
 (** Calcule la disjonction de deux formes clausales. *)
-let fcc_disj : forme_clausale -> forme_clausale -> forme_clausale =
- fun _ _ -> failwith "à faire"
+(*let rec fcc_disj = function f ->
+	match f with
+		| fcc_disj(a, b) -> Ou(fcc_conj(a), fcc_conj(b))
+		| Imp(a, b) -> Et(non(a), b)*)
+		
+let rec fcc_disj = function f ->
+	match f with
+		| Imp(a, b) -> Et(Non(a), b)
 
 (** Mise en FCC, étape 3 : calcule la forme clausale associée à une formule. *)
 let formule_to_fcc : formule -> forme_clausale = fun _ -> failwith "à faire"
@@ -66,12 +93,16 @@ let formule_to_fcc : formule -> forme_clausale = fun _ -> failwith "à faire"
 (** Calcule le résolvant de deux clauses pour un littéral donné :
     resolvant a c1 c2 = (c1 \ a) U (c2 \ a')
     où a' est le littéral opposé à a. *)
-let resolvant : litteral -> clause -> clause -> clause =
- fun _ _ -> failwith "à faire"
+let resolvant a c1 c2 = function f ->
+	match f with
+		union (remove a c1) (remove(Non(a)) c2)
+	
+		
 
 (** Calcule l'ensemble des résolvants possibles entre deux clauses. *)
-let resolvants : clause -> clause -> forme_clausale =
- fun _ _ -> failwith "à faire"
+(*let resolvants = function f -> failwith "à faire"
+	match f with
+		| resolvants(a, b) *)
 
 (** Teste si une formule donnée est une contradiction. *)
 let is_contradiction f =
