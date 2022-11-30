@@ -1,0 +1,4 @@
+(executable
+ (name Sudoku)
+ (modules Adapteurs Case Sudoku)
+ (libraries Proposition))
