@@ -1,0 +1,3 @@
+(library
+ (name Proposition)
+ (libraries str))
