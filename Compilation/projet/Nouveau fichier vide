@@ -1,0 +1,73 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+%}
+
+%union {
+    char *str;
+}
+
+%token <str> IDENTIFIER
+%token <str> LATEX_STRING
+%token <str> INTEGER
+%token <str> ADD SUB MUL DIV
+%token SET WHILE ENDWHILE
+
+%type <str> equation expression term factor statement while_statement set_statement
+
+%%
+
+program:
+    statement
+    ;
+
+statement:
+    equation { printf("%s\n", $1); }
+    | set_statement { printf("%s\n", $1); }
+    | while_statement { printf("%s\n", $1); }
+    ;
+
+equation:
+    expression { $$ = $1; }
+    ;
+
+expression:
+    expression ADD term { $$ = (char*) malloc(strlen($1) + strlen($3) + 5); sprintf($$, "%s\n%s\nADD", $1, $3); }
+    | expression SUB term { $$ = (char*) malloc(strlen($1) + strlen($3) + 5); sprintf($$, "%s\n%s\nSUB", $1, $3); }
+    | term { $$ = $1; }
+    ;
+
+term:
+    term MUL factor { $$ = (char*) malloc(strlen($1) + strlen($3) + 5); sprintf($$, "%s\n%s\nMUL", $1, $3); }
+    | term DIV factor { $$ = (char*) malloc(strlen($1) + strlen($3) + 5); sprintf($$, "%s\n%s\nDIV", $1, $3); }
+    | factor { $$ = $1; }
+    ;
+
+factor:
+    LATEX_STRING { $$ = $1; }
+    | INTEGER { $$ = $1; }
+    | IDENTIFIER { $$ = $1; }
+    | '(' expression ')' { $$ = $2; }
+    ;
+
+set_statement:
+    SET IDENTIFIER expression { $$ = (char*) malloc(strlen($2) + strlen($3) + 8); sprintf($$, "%s\n%s\nSET", $3, $2); }
+    ;
+
+while_statement:
+    WHILE expression ENDWHILE { $$ = (char*) malloc(strlen($2) + 14); sprintf($$, "%s\nL0:\n%s\nJZ L1", $2, $2); }
+    | WHILE expression statement ENDWHILE { $$ = (char*) malloc(strlen($2) + strlen($3) + 26); sprintf($$, "%s\nL0:\n%s\nJZ L1\n%s\nJMP L0\nL1:", $2, $2, $3); }
+    ;
+
+%%
+
+int main() {
+    yyparse();
+    return 0;
+}
+
+int yyerror(char *msg) {
+    printf("Error: %s\n", msg);
+    return 0;
+}

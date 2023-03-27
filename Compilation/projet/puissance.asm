@@ -1,0 +1,12 @@
+	pop ax
+	pop bx
+	mul ax,bx
+	push ax
+	pop ax
+	pop bx
+	mul ax,bx
+	push ax
+	pop ax
+	pop bx
+	mul ax,bx
+	push ax

@@ -1,0 +1,652 @@
+État 44 conflits: 4 décalage/réduction
+État 45 conflits: 4 décalage/réduction
+État 46 conflits: 4 décalage/réduction
+État 47 conflits: 4 décalage/réduction
+
+
+Grammaire
+
+    0 $accept: ALGO $end
+
+    1 $@1: ε
+
+    2 $@2: ε
+
+    3 ALGO: DEB '{' ID $@1 '}' '{' lparam '}' EXPR $@2 FIN
+
+    4 lparam: lparam ',' ID
+    5       | ID
+    6       | ε
+
+    7 $@3: ε
+
+    8 $@4: ε
+
+    9 EXPR: SET '{' ID $@3 '}' '{' Calcul $@4 '}' EXPR
+
+   10 $@5: ε
+
+   11 $@6: ε
+
+   12 $@7: ε
+
+   13 $@8: ε
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT $@6 '}' '{' ID $@7 '}' EXPR OD $@8 EXPR
+
+   15 $@9: ε
+
+   16 EXPR: RETURN '{' ID $@9 '}'
+   17     | ε
+
+   18 Calcul: Calcul '*' Calcul
+   19       | Calcul '/' Calcul
+   20       | Calcul '+' Calcul
+   21       | Calcul '-' Calcul
+   22       | ID
+   23       | INT
+
+
+Terminaux, suivis des règles où ils apparaissent
+
+    $end (0) 0
+    '*' (42) 18
+    '+' (43) 20
+    ',' (44) 4
+    '-' (45) 21
+    '/' (47) 19
+    '{' (123) 3 9 14 16
+    '}' (125) 3 9 14 16
+    error (256)
+    INT <integer> (258) 14 23
+    DEB (259) 3
+    FIN (260) 3
+    ID <id> (261) 3 4 5 9 14 16 22
+    SET (262) 9
+    DOFORI (263) 14
+    OD (264) 14
+    RETURN (265) 16
+
+
+Non-terminaux, suivis des règles où ils apparaissent
+
+    $accept (18)
+        à gauche: 0
+    ALGO (19)
+        à gauche: 3
+        à droite: 0
+    $@1 (20)
+        à gauche: 1
+        à droite: 3
+    $@2 (21)
+        à gauche: 2
+        à droite: 3
+    lparam <integer> (22)
+        à gauche: 4 5 6
+        à droite: 3 4
+    EXPR (23)
+        à gauche: 9 14 16 17
+        à droite: 3 9 14
+    $@3 (24)
+        à gauche: 7
+        à droite: 9
+    $@4 (25)
+        à gauche: 8
+        à droite: 9
+    $@5 (26)
+        à gauche: 10
+        à droite: 14
+    $@6 (27)
+        à gauche: 11
+        à droite: 14
+    $@7 (28)
+        à gauche: 12
+        à droite: 14
+    $@8 (29)
+        à gauche: 13
+        à droite: 14
+    $@9 (30)
+        à gauche: 15
+        à droite: 16
+    Calcul <integer> (31)
+        à gauche: 18 19 20 21 22 23
+        à droite: 9 18 19 20 21
+
+
+État 0
+
+    0 $accept: • ALGO $end
+
+    DEB  décalage et aller à l'état 1
+
+    ALGO  aller à l'état 2
+
+
+État 1
+
+    3 ALGO: DEB • '{' ID $@1 '}' '{' lparam '}' EXPR $@2 FIN
+
+    '{'  décalage et aller à l'état 3
+
+
+État 2
+
+    0 $accept: ALGO • $end
+
+    $end  décalage et aller à l'état 4
+
+
+État 3
+
+    3 ALGO: DEB '{' • ID $@1 '}' '{' lparam '}' EXPR $@2 FIN
+
+    ID  décalage et aller à l'état 5
+
+
+État 4
+
+    0 $accept: ALGO $end •
+
+    $défaut  accepter
+
+
+État 5
+
+    3 ALGO: DEB '{' ID • $@1 '}' '{' lparam '}' EXPR $@2 FIN
+
+    $défaut  réduction par utilisation de la règle 1 ($@1)
+
+    $@1  aller à l'état 6
+
+
+État 6
+
+    3 ALGO: DEB '{' ID $@1 • '}' '{' lparam '}' EXPR $@2 FIN
+
+    '}'  décalage et aller à l'état 7
+
+
+État 7
+
+    3 ALGO: DEB '{' ID $@1 '}' • '{' lparam '}' EXPR $@2 FIN
+
+    '{'  décalage et aller à l'état 8
+
+
+État 8
+
+    3 ALGO: DEB '{' ID $@1 '}' '{' • lparam '}' EXPR $@2 FIN
+
+    ID  décalage et aller à l'état 9
+
+    $défaut  réduction par utilisation de la règle 6 (lparam)
+
+    lparam  aller à l'état 10
+
+
+État 9
+
+    5 lparam: ID •
+
+    $défaut  réduction par utilisation de la règle 5 (lparam)
+
+
+État 10
+
+    3 ALGO: DEB '{' ID $@1 '}' '{' lparam • '}' EXPR $@2 FIN
+    4 lparam: lparam • ',' ID
+
+    '}'  décalage et aller à l'état 11
+    ','  décalage et aller à l'état 12
+
+
+État 11
+
+    3 ALGO: DEB '{' ID $@1 '}' '{' lparam '}' • EXPR $@2 FIN
+
+    SET     décalage et aller à l'état 13
+    DOFORI  décalage et aller à l'état 14
+    RETURN  décalage et aller à l'état 15
+
+    $défaut  réduction par utilisation de la règle 17 (EXPR)
+
+    EXPR  aller à l'état 16
+
+
+État 12
+
+    4 lparam: lparam ',' • ID
+
+    ID  décalage et aller à l'état 17
+
+
+État 13
+
+    9 EXPR: SET • '{' ID $@3 '}' '{' Calcul $@4 '}' EXPR
+
+    '{'  décalage et aller à l'état 18
+
+
+État 14
+
+   14 EXPR: DOFORI • '{' ID $@5 '}' '{' INT $@6 '}' '{' ID $@7 '}' EXPR OD $@8 EXPR
+
+    '{'  décalage et aller à l'état 19
+
+
+État 15
+
+   16 EXPR: RETURN • '{' ID $@9 '}'
+
+    '{'  décalage et aller à l'état 20
+
+
+État 16
+
+    3 ALGO: DEB '{' ID $@1 '}' '{' lparam '}' EXPR • $@2 FIN
+
+    $défaut  réduction par utilisation de la règle 2 ($@2)
+
+    $@2  aller à l'état 21
+
+
+État 17
+
+    4 lparam: lparam ',' ID •
+
+    $défaut  réduction par utilisation de la règle 4 (lparam)
+
+
+État 18
+
+    9 EXPR: SET '{' • ID $@3 '}' '{' Calcul $@4 '}' EXPR
+
+    ID  décalage et aller à l'état 22
+
+
+État 19
+
+   14 EXPR: DOFORI '{' • ID $@5 '}' '{' INT $@6 '}' '{' ID $@7 '}' EXPR OD $@8 EXPR
+
+    ID  décalage et aller à l'état 23
+
+
+État 20
+
+   16 EXPR: RETURN '{' • ID $@9 '}'
+
+    ID  décalage et aller à l'état 24
+
+
+État 21
+
+    3 ALGO: DEB '{' ID $@1 '}' '{' lparam '}' EXPR $@2 • FIN
+
+    FIN  décalage et aller à l'état 25
+
+
+État 22
+
+    9 EXPR: SET '{' ID • $@3 '}' '{' Calcul $@4 '}' EXPR
+
+    $défaut  réduction par utilisation de la règle 7 ($@3)
+
+    $@3  aller à l'état 26
+
+
+État 23
+
+   14 EXPR: DOFORI '{' ID • $@5 '}' '{' INT $@6 '}' '{' ID $@7 '}' EXPR OD $@8 EXPR
+
+    $défaut  réduction par utilisation de la règle 10 ($@5)
+
+    $@5  aller à l'état 27
+
+
+État 24
+
+   16 EXPR: RETURN '{' ID • $@9 '}'
+
+    $défaut  réduction par utilisation de la règle 15 ($@9)
+
+    $@9  aller à l'état 28
+
+
+État 25
+
+    3 ALGO: DEB '{' ID $@1 '}' '{' lparam '}' EXPR $@2 FIN •
+
+    $défaut  réduction par utilisation de la règle 3 (ALGO)
+
+
+État 26
+
+    9 EXPR: SET '{' ID $@3 • '}' '{' Calcul $@4 '}' EXPR
+
+    '}'  décalage et aller à l'état 29
+
+
+État 27
+
+   14 EXPR: DOFORI '{' ID $@5 • '}' '{' INT $@6 '}' '{' ID $@7 '}' EXPR OD $@8 EXPR
+
+    '}'  décalage et aller à l'état 30
+
+
+État 28
+
+   16 EXPR: RETURN '{' ID $@9 • '}'
+
+    '}'  décalage et aller à l'état 31
+
+
+État 29
+
+    9 EXPR: SET '{' ID $@3 '}' • '{' Calcul $@4 '}' EXPR
+
+    '{'  décalage et aller à l'état 32
+
+
+État 30
+
+   14 EXPR: DOFORI '{' ID $@5 '}' • '{' INT $@6 '}' '{' ID $@7 '}' EXPR OD $@8 EXPR
+
+    '{'  décalage et aller à l'état 33
+
+
+État 31
+
+   16 EXPR: RETURN '{' ID $@9 '}' •
+
+    $défaut  réduction par utilisation de la règle 16 (EXPR)
+
+
+État 32
+
+    9 EXPR: SET '{' ID $@3 '}' '{' • Calcul $@4 '}' EXPR
+
+    INT  décalage et aller à l'état 34
+    ID   décalage et aller à l'état 35
+
+    Calcul  aller à l'état 36
+
+
+État 33
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' • INT $@6 '}' '{' ID $@7 '}' EXPR OD $@8 EXPR
+
+    INT  décalage et aller à l'état 37
+
+
+État 34
+
+   23 Calcul: INT •
+
+    $défaut  réduction par utilisation de la règle 23 (Calcul)
+
+
+État 35
+
+   22 Calcul: ID •
+
+    $défaut  réduction par utilisation de la règle 22 (Calcul)
+
+
+État 36
+
+    9 EXPR: SET '{' ID $@3 '}' '{' Calcul • $@4 '}' EXPR
+   18 Calcul: Calcul • '*' Calcul
+   19       | Calcul • '/' Calcul
+   20       | Calcul • '+' Calcul
+   21       | Calcul • '-' Calcul
+
+    '*'  décalage et aller à l'état 38
+    '/'  décalage et aller à l'état 39
+    '+'  décalage et aller à l'état 40
+    '-'  décalage et aller à l'état 41
+
+    $défaut  réduction par utilisation de la règle 8 ($@4)
+
+    $@4  aller à l'état 42
+
+
+État 37
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT • $@6 '}' '{' ID $@7 '}' EXPR OD $@8 EXPR
+
+    $défaut  réduction par utilisation de la règle 11 ($@6)
+
+    $@6  aller à l'état 43
+
+
+État 38
+
+   18 Calcul: Calcul '*' • Calcul
+
+    INT  décalage et aller à l'état 34
+    ID   décalage et aller à l'état 35
+
+    Calcul  aller à l'état 44
+
+
+État 39
+
+   19 Calcul: Calcul '/' • Calcul
+
+    INT  décalage et aller à l'état 34
+    ID   décalage et aller à l'état 35
+
+    Calcul  aller à l'état 45
+
+
+État 40
+
+   20 Calcul: Calcul '+' • Calcul
+
+    INT  décalage et aller à l'état 34
+    ID   décalage et aller à l'état 35
+
+    Calcul  aller à l'état 46
+
+
+État 41
+
+   21 Calcul: Calcul '-' • Calcul
+
+    INT  décalage et aller à l'état 34
+    ID   décalage et aller à l'état 35
+
+    Calcul  aller à l'état 47
+
+
+État 42
+
+    9 EXPR: SET '{' ID $@3 '}' '{' Calcul $@4 • '}' EXPR
+
+    '}'  décalage et aller à l'état 48
+
+
+État 43
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT $@6 • '}' '{' ID $@7 '}' EXPR OD $@8 EXPR
+
+    '}'  décalage et aller à l'état 49
+
+
+État 44
+
+   18 Calcul: Calcul • '*' Calcul
+   18       | Calcul '*' Calcul •
+   19       | Calcul • '/' Calcul
+   20       | Calcul • '+' Calcul
+   21       | Calcul • '-' Calcul
+
+    '*'  décalage et aller à l'état 38
+    '/'  décalage et aller à l'état 39
+    '+'  décalage et aller à l'état 40
+    '-'  décalage et aller à l'état 41
+
+    '*'      [réduction par utilisation de la règle 18 (Calcul)]
+    '/'      [réduction par utilisation de la règle 18 (Calcul)]
+    '+'      [réduction par utilisation de la règle 18 (Calcul)]
+    '-'      [réduction par utilisation de la règle 18 (Calcul)]
+    $défaut  réduction par utilisation de la règle 18 (Calcul)
+
+
+État 45
+
+   18 Calcul: Calcul • '*' Calcul
+   19       | Calcul • '/' Calcul
+   19       | Calcul '/' Calcul •
+   20       | Calcul • '+' Calcul
+   21       | Calcul • '-' Calcul
+
+    '*'  décalage et aller à l'état 38
+    '/'  décalage et aller à l'état 39
+    '+'  décalage et aller à l'état 40
+    '-'  décalage et aller à l'état 41
+
+    '*'      [réduction par utilisation de la règle 19 (Calcul)]
+    '/'      [réduction par utilisation de la règle 19 (Calcul)]
+    '+'      [réduction par utilisation de la règle 19 (Calcul)]
+    '-'      [réduction par utilisation de la règle 19 (Calcul)]
+    $défaut  réduction par utilisation de la règle 19 (Calcul)
+
+
+État 46
+
+   18 Calcul: Calcul • '*' Calcul
+   19       | Calcul • '/' Calcul
+   20       | Calcul • '+' Calcul
+   20       | Calcul '+' Calcul •
+   21       | Calcul • '-' Calcul
+
+    '*'  décalage et aller à l'état 38
+    '/'  décalage et aller à l'état 39
+    '+'  décalage et aller à l'état 40
+    '-'  décalage et aller à l'état 41
+
+    '*'      [réduction par utilisation de la règle 20 (Calcul)]
+    '/'      [réduction par utilisation de la règle 20 (Calcul)]
+    '+'      [réduction par utilisation de la règle 20 (Calcul)]
+    '-'      [réduction par utilisation de la règle 20 (Calcul)]
+    $défaut  réduction par utilisation de la règle 20 (Calcul)
+
+
+État 47
+
+   18 Calcul: Calcul • '*' Calcul
+   19       | Calcul • '/' Calcul
+   20       | Calcul • '+' Calcul
+   21       | Calcul • '-' Calcul
+   21       | Calcul '-' Calcul •
+
+    '*'  décalage et aller à l'état 38
+    '/'  décalage et aller à l'état 39
+    '+'  décalage et aller à l'état 40
+    '-'  décalage et aller à l'état 41
+
+    '*'      [réduction par utilisation de la règle 21 (Calcul)]
+    '/'      [réduction par utilisation de la règle 21 (Calcul)]
+    '+'      [réduction par utilisation de la règle 21 (Calcul)]
+    '-'      [réduction par utilisation de la règle 21 (Calcul)]
+    $défaut  réduction par utilisation de la règle 21 (Calcul)
+
+
+État 48
+
+    9 EXPR: SET '{' ID $@3 '}' '{' Calcul $@4 '}' • EXPR
+
+    SET     décalage et aller à l'état 13
+    DOFORI  décalage et aller à l'état 14
+    RETURN  décalage et aller à l'état 15
+
+    $défaut  réduction par utilisation de la règle 17 (EXPR)
+
+    EXPR  aller à l'état 50
+
+
+État 49
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT $@6 '}' • '{' ID $@7 '}' EXPR OD $@8 EXPR
+
+    '{'  décalage et aller à l'état 51
+
+
+État 50
+
+    9 EXPR: SET '{' ID $@3 '}' '{' Calcul $@4 '}' EXPR •
+
+    $défaut  réduction par utilisation de la règle 9 (EXPR)
+
+
+État 51
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT $@6 '}' '{' • ID $@7 '}' EXPR OD $@8 EXPR
+
+    ID  décalage et aller à l'état 52
+
+
+État 52
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT $@6 '}' '{' ID • $@7 '}' EXPR OD $@8 EXPR
+
+    $défaut  réduction par utilisation de la règle 12 ($@7)
+
+    $@7  aller à l'état 53
+
+
+État 53
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT $@6 '}' '{' ID $@7 • '}' EXPR OD $@8 EXPR
+
+    '}'  décalage et aller à l'état 54
+
+
+État 54
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT $@6 '}' '{' ID $@7 '}' • EXPR OD $@8 EXPR
+
+    SET     décalage et aller à l'état 13
+    DOFORI  décalage et aller à l'état 14
+    RETURN  décalage et aller à l'état 15
+
+    $défaut  réduction par utilisation de la règle 17 (EXPR)
+
+    EXPR  aller à l'état 55
+
+
+État 55
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT $@6 '}' '{' ID $@7 '}' EXPR • OD $@8 EXPR
+
+    OD  décalage et aller à l'état 56
+
+
+État 56
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT $@6 '}' '{' ID $@7 '}' EXPR OD • $@8 EXPR
+
+    $défaut  réduction par utilisation de la règle 13 ($@8)
+
+    $@8  aller à l'état 57
+
+
+État 57
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT $@6 '}' '{' ID $@7 '}' EXPR OD $@8 • EXPR
+
+    SET     décalage et aller à l'état 13
+    DOFORI  décalage et aller à l'état 14
+    RETURN  décalage et aller à l'état 15
+
+    $défaut  réduction par utilisation de la règle 17 (EXPR)
+
+    EXPR  aller à l'état 58
+
+
+État 58
+
+   14 EXPR: DOFORI '{' ID $@5 '}' '{' INT $@6 '}' '{' ID $@7 '}' EXPR OD $@8 EXPR •
+
+    $défaut  réduction par utilisation de la règle 14 (EXPR)
