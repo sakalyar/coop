@@ -1,0 +1,17 @@
+// _fini
+// Return size: 8
+define _fini
+_fini_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000005ED4
+l0000000000005ED4:
+	rsp = rsp - 8<64>
+	SCZO = cond(rsp)
+	rsp = rsp + 8<64>
+	SCZO = cond(rsp)
+	return
+	// succ:  _fini_exit
+_fini_exit:
+
+

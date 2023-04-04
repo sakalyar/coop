@@ -1,0 +1,26 @@
+// _init
+// Return size: 8
+define _init
+_init_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002000
+l0000000000002000:
+	rsp = rsp - 8<64>
+	SCZO = cond(rsp)
+	rax = 0x0000000000002290<p64>
+	SZO = cond(rax & rax)
+	C = false
+	branch Test(EQ,Z) l0000000000002016
+	// succ:  l0000000000002014 l0000000000002016
+l0000000000002014:
+	call rax (retsize: 8;)
+	// succ:  l0000000000002016
+l0000000000002016:
+	rsp = rsp + 8<64>
+	SCZO = cond(rsp)
+	return
+	// succ:  _init_exit
+_init_exit:
+
+

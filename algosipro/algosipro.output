@@ -1,0 +1,1456 @@
+Terminaux inutilisés dans la grammaire
+
+    DOFORI
+
+
+Grammaire
+
+    0 $accept: algo $end
+
+    1 $@1: %empty
+
+    2 $@2: %empty
+
+    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' $@2 block_instr FIN
+
+    4 block_instr: instr
+    5            | instr block_instr
+
+    6 lparam: %empty
+    7       | param
+    8       | param ',' lparam
+
+    9 param: VARNAME
+
+   10 instr: SET '{' VARNAME '}' '{' expr '}'
+   11      | RETURN '{' expr '}'
+   12      | IF '{' expr '}' if block_instr esle fi FI
+   13      | IF '{' expr '}' if block_instr ELSE esle block_instr fi FI
+   14      | DOWHILE begin_while '{' expr '}' while block_instr elihw OD
+
+   15 if: %empty
+
+   16 esle: %empty
+
+   17 fi: %empty
+
+   18 begin_while: %empty
+
+   19 while: %empty
+
+   20 elihw: %empty
+
+   21 expr: VARNAME
+   22     | NUMBER
+   23     | expr '+' expr
+   24     | expr '-' expr
+   25     | expr '*' expr
+   26     | expr '/' expr
+   27     | VRAI
+   28     | FAUX
+   29     | expr INF expr
+   30     | expr INFEG expr
+   31     | expr SUP expr
+   32     | expr SUPEG expr
+   33     | expr EG expr
+   34     | expr NEG expr
+   35     | expr OU expr
+   36     | expr ET expr
+   37     | NON expr
+   38     | CALL '{' VARNAME '}' '{' lexpr '}'
+   39     | '(' expr ')'
+
+   40 lexpr: tmp_expr
+   41      | tmp_expr ',' lexpr
+
+   42 tmp_expr: expr
+
+
+Terminaux, suivis des règles où ils apparaissent
+
+    $end (0) 0
+    '(' (40) 39
+    ')' (41) 39
+    '*' (42) 25
+    '+' (43) 23
+    ',' (44) 8 41
+    '-' (45) 24
+    '/' (47) 26
+    '{' (123) 3 10 11 12 13 14 38
+    '}' (125) 3 10 11 12 13 14 38
+    error (256)
+    NUMBER <integer> (258) 22
+    VARNAME <var_name> (259) 3 9 10 21 38
+    DEB (260) 3
+    FIN (261) 3
+    SET (262) 10
+    RETURN (263) 11
+    IF (264) 12 13
+    FI (265) 12 13
+    ELSE (266) 13
+    DOWHILE (267) 14
+    OD (268) 14
+    DOFORI (269)
+    OU (270) 35
+    ET (271) 36
+    INF (272) 29
+    INFEG (273) 30
+    SUP (274) 31
+    SUPEG (275) 32
+    VRAI (276) 27
+    FAUX (277) 28
+    EG (278) 33
+    NEG (279) 34
+    CALL (280) 38
+    NON (281) 37
+
+
+Non-terminaux, suivis des règles où ils apparaissent
+
+    $accept (36)
+        à gauche: 0
+    algo (37)
+        à gauche: 3
+        à droite: 0
+    $@1 (38)
+        à gauche: 1
+        à droite: 3
+    $@2 (39)
+        à gauche: 2
+        à droite: 3
+    block_instr (40)
+        à gauche: 4 5
+        à droite: 3 5 12 13 14
+    lparam (41)
+        à gauche: 6 7 8
+        à droite: 3 8
+    param (42)
+        à gauche: 9
+        à droite: 7 8
+    instr <s> (43)
+        à gauche: 10 11 12 13 14
+        à droite: 4 5
+    if (44)
+        à gauche: 15
+        à droite: 12 13
+    esle (45)
+        à gauche: 16
+        à droite: 12 13
+    fi (46)
+        à gauche: 17
+        à droite: 12 13
+    begin_while (47)
+        à gauche: 18
+        à droite: 14
+    while (48)
+        à gauche: 19
+        à droite: 14
+    elihw (49)
+        à gauche: 20
+        à droite: 14
+    expr <s> (50)
+        à gauche: 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
+        à droite: 10 11 12 13 14 23 24 25 26 29 30 31 32 33 34 35 36 37 39 42
+    lexpr (51)
+        à gauche: 40 41
+        à droite: 38 41
+    tmp_expr (52)
+        à gauche: 42
+        à droite: 40 41
+
+
+État 0
+
+    0 $accept: . algo $end
+
+    DEB  décalage et aller à l'état 1
+
+    algo  aller à l'état 2
+
+
+État 1
+
+    3 algo: DEB . '{' VARNAME '}' $@1 '{' lparam '}' $@2 block_instr FIN
+
+    '{'  décalage et aller à l'état 3
+
+
+État 2
+
+    0 $accept: algo . $end
+
+    $end  décalage et aller à l'état 4
+
+
+État 3
+
+    3 algo: DEB '{' . VARNAME '}' $@1 '{' lparam '}' $@2 block_instr FIN
+
+    VARNAME  décalage et aller à l'état 5
+
+
+État 4
+
+    0 $accept: algo $end .
+
+    $défaut  accepter
+
+
+État 5
+
+    3 algo: DEB '{' VARNAME . '}' $@1 '{' lparam '}' $@2 block_instr FIN
+
+    '}'  décalage et aller à l'état 6
+
+
+État 6
+
+    3 algo: DEB '{' VARNAME '}' . $@1 '{' lparam '}' $@2 block_instr FIN
+
+    $défaut  réduction par utilisation de la règle 1 ($@1)
+
+    $@1  aller à l'état 7
+
+
+État 7
+
+    3 algo: DEB '{' VARNAME '}' $@1 . '{' lparam '}' $@2 block_instr FIN
+
+    '{'  décalage et aller à l'état 8
+
+
+État 8
+
+    3 algo: DEB '{' VARNAME '}' $@1 '{' . lparam '}' $@2 block_instr FIN
+
+    VARNAME  décalage et aller à l'état 9
+
+    $défaut  réduction par utilisation de la règle 6 (lparam)
+
+    lparam  aller à l'état 10
+    param   aller à l'état 11
+
+
+État 9
+
+    9 param: VARNAME .
+
+    $défaut  réduction par utilisation de la règle 9 (param)
+
+
+État 10
+
+    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam . '}' $@2 block_instr FIN
+
+    '}'  décalage et aller à l'état 12
+
+
+État 11
+
+    7 lparam: param .
+    8       | param . ',' lparam
+
+    ','  décalage et aller à l'état 13
+
+    $défaut  réduction par utilisation de la règle 7 (lparam)
+
+
+État 12
+
+    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' . $@2 block_instr FIN
+
+    $défaut  réduction par utilisation de la règle 2 ($@2)
+
+    $@2  aller à l'état 14
+
+
+État 13
+
+    8 lparam: param ',' . lparam
+
+    VARNAME  décalage et aller à l'état 9
+
+    $défaut  réduction par utilisation de la règle 6 (lparam)
+
+    lparam  aller à l'état 15
+    param   aller à l'état 11
+
+
+État 14
+
+    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' $@2 . block_instr FIN
+
+    SET      décalage et aller à l'état 16
+    RETURN   décalage et aller à l'état 17
+    IF       décalage et aller à l'état 18
+    DOWHILE  décalage et aller à l'état 19
+
+    block_instr  aller à l'état 20
+    instr        aller à l'état 21
+
+
+État 15
+
+    8 lparam: param ',' lparam .
+
+    $défaut  réduction par utilisation de la règle 8 (lparam)
+
+
+État 16
+
+   10 instr: SET . '{' VARNAME '}' '{' expr '}'
+
+    '{'  décalage et aller à l'état 22
+
+
+État 17
+
+   11 instr: RETURN . '{' expr '}'
+
+    '{'  décalage et aller à l'état 23
+
+
+État 18
+
+   12 instr: IF . '{' expr '}' if block_instr esle fi FI
+   13      | IF . '{' expr '}' if block_instr ELSE esle block_instr fi FI
+
+    '{'  décalage et aller à l'état 24
+
+
+État 19
+
+   14 instr: DOWHILE . begin_while '{' expr '}' while block_instr elihw OD
+
+    $défaut  réduction par utilisation de la règle 18 (begin_while)
+
+    begin_while  aller à l'état 25
+
+
+État 20
+
+    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' $@2 block_instr . FIN
+
+    FIN  décalage et aller à l'état 26
+
+
+État 21
+
+    4 block_instr: instr .
+    5            | instr . block_instr
+
+    SET      décalage et aller à l'état 16
+    RETURN   décalage et aller à l'état 17
+    IF       décalage et aller à l'état 18
+    DOWHILE  décalage et aller à l'état 19
+
+    $défaut  réduction par utilisation de la règle 4 (block_instr)
+
+    block_instr  aller à l'état 27
+    instr        aller à l'état 21
+
+
+État 22
+
+   10 instr: SET '{' . VARNAME '}' '{' expr '}'
+
+    VARNAME  décalage et aller à l'état 28
+
+
+État 23
+
+   11 instr: RETURN '{' . expr '}'
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 36
+
+
+État 24
+
+   12 instr: IF '{' . expr '}' if block_instr esle fi FI
+   13      | IF '{' . expr '}' if block_instr ELSE esle block_instr fi FI
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 37
+
+
+État 25
+
+   14 instr: DOWHILE begin_while . '{' expr '}' while block_instr elihw OD
+
+    '{'  décalage et aller à l'état 38
+
+
+État 26
+
+    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' $@2 block_instr FIN .
+
+    $défaut  réduction par utilisation de la règle 3 (algo)
+
+
+État 27
+
+    5 block_instr: instr block_instr .
+
+    $défaut  réduction par utilisation de la règle 5 (block_instr)
+
+
+État 28
+
+   10 instr: SET '{' VARNAME . '}' '{' expr '}'
+
+    '}'  décalage et aller à l'état 39
+
+
+État 29
+
+   22 expr: NUMBER .
+
+    $défaut  réduction par utilisation de la règle 22 (expr)
+
+
+État 30
+
+   21 expr: VARNAME .
+
+    $défaut  réduction par utilisation de la règle 21 (expr)
+
+
+État 31
+
+   27 expr: VRAI .
+
+    $défaut  réduction par utilisation de la règle 27 (expr)
+
+
+État 32
+
+   28 expr: FAUX .
+
+    $défaut  réduction par utilisation de la règle 28 (expr)
+
+
+État 33
+
+   38 expr: CALL . '{' VARNAME '}' '{' lexpr '}'
+
+    '{'  décalage et aller à l'état 40
+
+
+État 34
+
+   37 expr: NON . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 41
+
+
+État 35
+
+   39 expr: '(' . expr ')'
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 42
+
+
+État 36
+
+   11 instr: RETURN '{' expr . '}'
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    OU     décalage et aller à l'état 43
+    ET     décalage et aller à l'état 44
+    INF    décalage et aller à l'état 45
+    INFEG  décalage et aller à l'état 46
+    SUP    décalage et aller à l'état 47
+    SUPEG  décalage et aller à l'état 48
+    EG     décalage et aller à l'état 49
+    NEG    décalage et aller à l'état 50
+    '+'    décalage et aller à l'état 51
+    '-'    décalage et aller à l'état 52
+    '*'    décalage et aller à l'état 53
+    '/'    décalage et aller à l'état 54
+    '}'    décalage et aller à l'état 55
+
+
+État 37
+
+   12 instr: IF '{' expr . '}' if block_instr esle fi FI
+   13      | IF '{' expr . '}' if block_instr ELSE esle block_instr fi FI
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    OU     décalage et aller à l'état 43
+    ET     décalage et aller à l'état 44
+    INF    décalage et aller à l'état 45
+    INFEG  décalage et aller à l'état 46
+    SUP    décalage et aller à l'état 47
+    SUPEG  décalage et aller à l'état 48
+    EG     décalage et aller à l'état 49
+    NEG    décalage et aller à l'état 50
+    '+'    décalage et aller à l'état 51
+    '-'    décalage et aller à l'état 52
+    '*'    décalage et aller à l'état 53
+    '/'    décalage et aller à l'état 54
+    '}'    décalage et aller à l'état 56
+
+
+État 38
+
+   14 instr: DOWHILE begin_while '{' . expr '}' while block_instr elihw OD
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 57
+
+
+État 39
+
+   10 instr: SET '{' VARNAME '}' . '{' expr '}'
+
+    '{'  décalage et aller à l'état 58
+
+
+État 40
+
+   38 expr: CALL '{' . VARNAME '}' '{' lexpr '}'
+
+    VARNAME  décalage et aller à l'état 59
+
+
+État 41
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+   37     | NON expr .
+
+    $défaut  réduction par utilisation de la règle 37 (expr)
+
+
+État 42
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+   39     | '(' expr . ')'
+
+    OU     décalage et aller à l'état 43
+    ET     décalage et aller à l'état 44
+    INF    décalage et aller à l'état 45
+    INFEG  décalage et aller à l'état 46
+    SUP    décalage et aller à l'état 47
+    SUPEG  décalage et aller à l'état 48
+    EG     décalage et aller à l'état 49
+    NEG    décalage et aller à l'état 50
+    '+'    décalage et aller à l'état 51
+    '-'    décalage et aller à l'état 52
+    '*'    décalage et aller à l'état 53
+    '/'    décalage et aller à l'état 54
+    ')'    décalage et aller à l'état 60
+
+
+État 43
+
+   35 expr: expr OU . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 61
+
+
+État 44
+
+   36 expr: expr ET . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 62
+
+
+État 45
+
+   29 expr: expr INF . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 63
+
+
+État 46
+
+   30 expr: expr INFEG . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 64
+
+
+État 47
+
+   31 expr: expr SUP . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 65
+
+
+État 48
+
+   32 expr: expr SUPEG . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 66
+
+
+État 49
+
+   33 expr: expr EG . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 67
+
+
+État 50
+
+   34 expr: expr NEG . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 68
+
+
+État 51
+
+   23 expr: expr '+' . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 69
+
+
+État 52
+
+   24 expr: expr '-' . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 70
+
+
+État 53
+
+   25 expr: expr '*' . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 71
+
+
+État 54
+
+   26 expr: expr '/' . expr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 72
+
+
+État 55
+
+   11 instr: RETURN '{' expr '}' .
+
+    $défaut  réduction par utilisation de la règle 11 (instr)
+
+
+État 56
+
+   12 instr: IF '{' expr '}' . if block_instr esle fi FI
+   13      | IF '{' expr '}' . if block_instr ELSE esle block_instr fi FI
+
+    $défaut  réduction par utilisation de la règle 15 (if)
+
+    if  aller à l'état 73
+
+
+État 57
+
+   14 instr: DOWHILE begin_while '{' expr . '}' while block_instr elihw OD
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    OU     décalage et aller à l'état 43
+    ET     décalage et aller à l'état 44
+    INF    décalage et aller à l'état 45
+    INFEG  décalage et aller à l'état 46
+    SUP    décalage et aller à l'état 47
+    SUPEG  décalage et aller à l'état 48
+    EG     décalage et aller à l'état 49
+    NEG    décalage et aller à l'état 50
+    '+'    décalage et aller à l'état 51
+    '-'    décalage et aller à l'état 52
+    '*'    décalage et aller à l'état 53
+    '/'    décalage et aller à l'état 54
+    '}'    décalage et aller à l'état 74
+
+
+État 58
+
+   10 instr: SET '{' VARNAME '}' '{' . expr '}'
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr  aller à l'état 75
+
+
+État 59
+
+   38 expr: CALL '{' VARNAME . '}' '{' lexpr '}'
+
+    '}'  décalage et aller à l'état 76
+
+
+État 60
+
+   39 expr: '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 39 (expr)
+
+
+État 61
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   35     | expr OU expr .
+   36     | expr . ET expr
+
+    ET     décalage et aller à l'état 44
+    INF    décalage et aller à l'état 45
+    INFEG  décalage et aller à l'état 46
+    SUP    décalage et aller à l'état 47
+    SUPEG  décalage et aller à l'état 48
+    EG     décalage et aller à l'état 49
+    NEG    décalage et aller à l'état 50
+    '+'    décalage et aller à l'état 51
+    '-'    décalage et aller à l'état 52
+    '*'    décalage et aller à l'état 53
+    '/'    décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 35 (expr)
+
+
+État 62
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+   36     | expr ET expr .
+
+    INF    décalage et aller à l'état 45
+    INFEG  décalage et aller à l'état 46
+    SUP    décalage et aller à l'état 47
+    SUPEG  décalage et aller à l'état 48
+    EG     décalage et aller à l'état 49
+    NEG    décalage et aller à l'état 50
+    '+'    décalage et aller à l'état 51
+    '-'    décalage et aller à l'état 52
+    '*'    décalage et aller à l'état 53
+    '/'    décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 36 (expr)
+
+
+État 63
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   29     | expr INF expr .
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    EG   décalage et aller à l'état 49
+    NEG  décalage et aller à l'état 50
+    '+'  décalage et aller à l'état 51
+    '-'  décalage et aller à l'état 52
+    '*'  décalage et aller à l'état 53
+    '/'  décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 29 (expr)
+
+
+État 64
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   30     | expr INFEG expr .
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    EG   décalage et aller à l'état 49
+    NEG  décalage et aller à l'état 50
+    '+'  décalage et aller à l'état 51
+    '-'  décalage et aller à l'état 52
+    '*'  décalage et aller à l'état 53
+    '/'  décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 30 (expr)
+
+
+État 65
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   31     | expr SUP expr .
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    EG   décalage et aller à l'état 49
+    NEG  décalage et aller à l'état 50
+    '+'  décalage et aller à l'état 51
+    '-'  décalage et aller à l'état 52
+    '*'  décalage et aller à l'état 53
+    '/'  décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 31 (expr)
+
+
+État 66
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   32     | expr SUPEG expr .
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    EG   décalage et aller à l'état 49
+    NEG  décalage et aller à l'état 50
+    '+'  décalage et aller à l'état 51
+    '-'  décalage et aller à l'état 52
+    '*'  décalage et aller à l'état 53
+    '/'  décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 32 (expr)
+
+
+État 67
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   33     | expr EG expr .
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    '+'  décalage et aller à l'état 51
+    '-'  décalage et aller à l'état 52
+    '*'  décalage et aller à l'état 53
+    '/'  décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 33 (expr)
+
+
+État 68
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   34     | expr NEG expr .
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    '+'  décalage et aller à l'état 51
+    '-'  décalage et aller à l'état 52
+    '*'  décalage et aller à l'état 53
+    '/'  décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 34 (expr)
+
+
+État 69
+
+   23 expr: expr . '+' expr
+   23     | expr '+' expr .
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    '*'  décalage et aller à l'état 53
+    '/'  décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 23 (expr)
+
+
+État 70
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   24     | expr '-' expr .
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    '*'  décalage et aller à l'état 53
+    '/'  décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 24 (expr)
+
+
+État 71
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   25     | expr '*' expr .
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    $défaut  réduction par utilisation de la règle 25 (expr)
+
+
+État 72
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   26     | expr '/' expr .
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    $défaut  réduction par utilisation de la règle 26 (expr)
+
+
+État 73
+
+   12 instr: IF '{' expr '}' if . block_instr esle fi FI
+   13      | IF '{' expr '}' if . block_instr ELSE esle block_instr fi FI
+
+    SET      décalage et aller à l'état 16
+    RETURN   décalage et aller à l'état 17
+    IF       décalage et aller à l'état 18
+    DOWHILE  décalage et aller à l'état 19
+
+    block_instr  aller à l'état 77
+    instr        aller à l'état 21
+
+
+État 74
+
+   14 instr: DOWHILE begin_while '{' expr '}' . while block_instr elihw OD
+
+    $défaut  réduction par utilisation de la règle 19 (while)
+
+    while  aller à l'état 78
+
+
+État 75
+
+   10 instr: SET '{' VARNAME '}' '{' expr . '}'
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+
+    OU     décalage et aller à l'état 43
+    ET     décalage et aller à l'état 44
+    INF    décalage et aller à l'état 45
+    INFEG  décalage et aller à l'état 46
+    SUP    décalage et aller à l'état 47
+    SUPEG  décalage et aller à l'état 48
+    EG     décalage et aller à l'état 49
+    NEG    décalage et aller à l'état 50
+    '+'    décalage et aller à l'état 51
+    '-'    décalage et aller à l'état 52
+    '*'    décalage et aller à l'état 53
+    '/'    décalage et aller à l'état 54
+    '}'    décalage et aller à l'état 79
+
+
+État 76
+
+   38 expr: CALL '{' VARNAME '}' . '{' lexpr '}'
+
+    '{'  décalage et aller à l'état 80
+
+
+État 77
+
+   12 instr: IF '{' expr '}' if block_instr . esle fi FI
+   13      | IF '{' expr '}' if block_instr . ELSE esle block_instr fi FI
+
+    ELSE  décalage et aller à l'état 81
+
+    $défaut  réduction par utilisation de la règle 16 (esle)
+
+    esle  aller à l'état 82
+
+
+État 78
+
+   14 instr: DOWHILE begin_while '{' expr '}' while . block_instr elihw OD
+
+    SET      décalage et aller à l'état 16
+    RETURN   décalage et aller à l'état 17
+    IF       décalage et aller à l'état 18
+    DOWHILE  décalage et aller à l'état 19
+
+    block_instr  aller à l'état 83
+    instr        aller à l'état 21
+
+
+État 79
+
+   10 instr: SET '{' VARNAME '}' '{' expr '}' .
+
+    $défaut  réduction par utilisation de la règle 10 (instr)
+
+
+État 80
+
+   38 expr: CALL '{' VARNAME '}' '{' . lexpr '}'
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr      aller à l'état 84
+    lexpr     aller à l'état 85
+    tmp_expr  aller à l'état 86
+
+
+État 81
+
+   13 instr: IF '{' expr '}' if block_instr ELSE . esle block_instr fi FI
+
+    $défaut  réduction par utilisation de la règle 16 (esle)
+
+    esle  aller à l'état 87
+
+
+État 82
+
+   12 instr: IF '{' expr '}' if block_instr esle . fi FI
+
+    $défaut  réduction par utilisation de la règle 17 (fi)
+
+    fi  aller à l'état 88
+
+
+État 83
+
+   14 instr: DOWHILE begin_while '{' expr '}' while block_instr . elihw OD
+
+    $défaut  réduction par utilisation de la règle 20 (elihw)
+
+    elihw  aller à l'état 89
+
+
+État 84
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   29     | expr . INF expr
+   30     | expr . INFEG expr
+   31     | expr . SUP expr
+   32     | expr . SUPEG expr
+   33     | expr . EG expr
+   34     | expr . NEG expr
+   35     | expr . OU expr
+   36     | expr . ET expr
+   42 tmp_expr: expr .
+
+    OU     décalage et aller à l'état 43
+    ET     décalage et aller à l'état 44
+    INF    décalage et aller à l'état 45
+    INFEG  décalage et aller à l'état 46
+    SUP    décalage et aller à l'état 47
+    SUPEG  décalage et aller à l'état 48
+    EG     décalage et aller à l'état 49
+    NEG    décalage et aller à l'état 50
+    '+'    décalage et aller à l'état 51
+    '-'    décalage et aller à l'état 52
+    '*'    décalage et aller à l'état 53
+    '/'    décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 42 (tmp_expr)
+
+
+État 85
+
+   38 expr: CALL '{' VARNAME '}' '{' lexpr . '}'
+
+    '}'  décalage et aller à l'état 90
+
+
+État 86
+
+   40 lexpr: tmp_expr .
+   41      | tmp_expr . ',' lexpr
+
+    ','  décalage et aller à l'état 91
+
+    $défaut  réduction par utilisation de la règle 40 (lexpr)
+
+
+État 87
+
+   13 instr: IF '{' expr '}' if block_instr ELSE esle . block_instr fi FI
+
+    SET      décalage et aller à l'état 16
+    RETURN   décalage et aller à l'état 17
+    IF       décalage et aller à l'état 18
+    DOWHILE  décalage et aller à l'état 19
+
+    block_instr  aller à l'état 92
+    instr        aller à l'état 21
+
+
+État 88
+
+   12 instr: IF '{' expr '}' if block_instr esle fi . FI
+
+    FI  décalage et aller à l'état 93
+
+
+État 89
+
+   14 instr: DOWHILE begin_while '{' expr '}' while block_instr elihw . OD
+
+    OD  décalage et aller à l'état 94
+
+
+État 90
+
+   38 expr: CALL '{' VARNAME '}' '{' lexpr '}' .
+
+    $défaut  réduction par utilisation de la règle 38 (expr)
+
+
+État 91
+
+   41 lexpr: tmp_expr ',' . lexpr
+
+    NUMBER   décalage et aller à l'état 29
+    VARNAME  décalage et aller à l'état 30
+    VRAI     décalage et aller à l'état 31
+    FAUX     décalage et aller à l'état 32
+    CALL     décalage et aller à l'état 33
+    NON      décalage et aller à l'état 34
+    '('      décalage et aller à l'état 35
+
+    expr      aller à l'état 84
+    lexpr     aller à l'état 95
+    tmp_expr  aller à l'état 86
+
+
+État 92
+
+   13 instr: IF '{' expr '}' if block_instr ELSE esle block_instr . fi FI
+
+    $défaut  réduction par utilisation de la règle 17 (fi)
+
+    fi  aller à l'état 96
+
+
+État 93
+
+   12 instr: IF '{' expr '}' if block_instr esle fi FI .
+
+    $défaut  réduction par utilisation de la règle 12 (instr)
+
+
+État 94
+
+   14 instr: DOWHILE begin_while '{' expr '}' while block_instr elihw OD .
+
+    $défaut  réduction par utilisation de la règle 14 (instr)
+
+
+État 95
+
+   41 lexpr: tmp_expr ',' lexpr .
+
+    $défaut  réduction par utilisation de la règle 41 (lexpr)
+
+
+État 96
+
+   13 instr: IF '{' expr '}' if block_instr ELSE esle block_instr fi . FI
+
+    FI  décalage et aller à l'état 97
+
+
+État 97
+
+   13 instr: IF '{' expr '}' if block_instr ELSE esle block_instr fi FI .
+
+    $défaut  réduction par utilisation de la règle 13 (instr)

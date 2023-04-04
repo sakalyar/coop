@@ -1,0 +1,14 @@
+// fn0000000000002140
+// Return size: 0
+define fn0000000000002140
+fn0000000000002140_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002140
+l0000000000002140:
+	call __cxa_finalize (retsize: 0;)
+	return
+	// succ:  fn0000000000002140_exit
+fn0000000000002140_exit:
+
+

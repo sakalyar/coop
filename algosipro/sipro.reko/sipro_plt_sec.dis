@@ -1,0 +1,224 @@
+// fn0000000000002150
+// Return size: 0
+define fn0000000000002150
+fn0000000000002150_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002150
+l0000000000002150:
+	call __errno_location (retsize: 0;)
+	return
+	// succ:  fn0000000000002150_exit
+fn0000000000002150_exit:
+
+
+// fn0000000000002160
+// Return size: 0
+define fn0000000000002160
+fn0000000000002160_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002160
+l0000000000002160:
+	call fclose (retsize: 0;)
+	return
+	// succ:  fn0000000000002160_exit
+fn0000000000002160_exit:
+
+
+// fn0000000000002170
+// Return size: 0
+define fn0000000000002170
+fn0000000000002170_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002170
+l0000000000002170:
+	call __stack_chk_fail (retsize: 0;)
+	return
+	// succ:  fn0000000000002170_exit
+fn0000000000002170_exit:
+
+
+// fn0000000000002180
+// Return size: 0
+define fn0000000000002180
+fn0000000000002180_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002180
+l0000000000002180:
+	call printf (retsize: 0;)
+	return
+	// succ:  fn0000000000002180_exit
+fn0000000000002180_exit:
+
+
+// fn0000000000002190
+// Return size: 0
+define fn0000000000002190
+fn0000000000002190_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002190
+l0000000000002190:
+	call fgetc (retsize: 0;)
+	return
+	// succ:  fn0000000000002190_exit
+fn0000000000002190_exit:
+
+
+// fn00000000000021A0
+// Return size: 0
+define fn00000000000021A0
+fn00000000000021A0_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l00000000000021A0
+l00000000000021A0:
+	call fputc (retsize: 0;)
+	return
+	// succ:  fn00000000000021A0_exit
+fn00000000000021A0_exit:
+
+
+// fn00000000000021B0
+// Return size: 0
+define fn00000000000021B0
+fn00000000000021B0_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l00000000000021B0
+l00000000000021B0:
+	call getchar (retsize: 0;)
+	return
+	// succ:  fn00000000000021B0_exit
+fn00000000000021B0_exit:
+
+
+// fn00000000000021C0
+// Return size: 0
+define fn00000000000021C0
+fn00000000000021C0_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l00000000000021C0
+l00000000000021C0:
+	call __monstartup (retsize: 0;)
+	return
+	// succ:  fn00000000000021C0_exit
+fn00000000000021C0_exit:
+
+
+// fn00000000000021D0
+// Return size: 0
+define fn00000000000021D0
+fn00000000000021D0_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l00000000000021D0
+l00000000000021D0:
+	call fprintf (retsize: 0;)
+	return
+	// succ:  fn00000000000021D0_exit
+fn00000000000021D0_exit:
+
+
+// fn00000000000021E0
+// Return size: 0
+define fn00000000000021E0
+fn00000000000021E0_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l00000000000021E0
+l00000000000021E0:
+	call feof (retsize: 0;)
+	return
+	// succ:  fn00000000000021E0_exit
+fn00000000000021E0_exit:
+
+
+// fn00000000000021F0
+// Return size: 0
+define fn00000000000021F0
+fn00000000000021F0_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l00000000000021F0
+l00000000000021F0:
+	call fopen (retsize: 0;)
+	return
+	// succ:  fn00000000000021F0_exit
+fn00000000000021F0_exit:
+
+
+// fn0000000000002200
+// Return size: 0
+define fn0000000000002200
+fn0000000000002200_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002200
+l0000000000002200:
+	call getopt (retsize: 0;)
+	return
+	// succ:  fn0000000000002200_exit
+fn0000000000002200_exit:
+
+
+// fn0000000000002220
+// Return size: 0
+define fn0000000000002220
+fn0000000000002220_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002220
+l0000000000002220:
+	call __isoc99_scanf (retsize: 0;)
+	return
+	// succ:  fn0000000000002220_exit
+fn0000000000002220_exit:
+
+
+// fn0000000000002230
+// Return size: 0
+define fn0000000000002230
+fn0000000000002230_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002230
+l0000000000002230:
+	call exit (retsize: 0;)
+	return
+	// succ:  fn0000000000002230_exit
+fn0000000000002230_exit:
+
+
+// fn0000000000002240
+// Return size: 0
+define fn0000000000002240
+fn0000000000002240_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002240
+l0000000000002240:
+	call fwrite (retsize: 0;)
+	return
+	// succ:  fn0000000000002240_exit
+fn0000000000002240_exit:
+
+
+// fn0000000000002250
+// Return size: 0
+define fn0000000000002250
+fn0000000000002250_entry:
+	rsp = fp
+	Top = 0<i8>
+	// succ:  l0000000000002250
+l0000000000002250:
+	call strerror (retsize: 0;)
+	return
+	// succ:  fn0000000000002250_exit
+fn0000000000002250_exit:
+
+
