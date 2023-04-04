@@ -1,44 +1,51 @@
-Terminaux inutilisés dans la grammaire
+Terminals unused in grammar
 
     DOFORI
+    OU
+    ET
+    INF
+    INFEG
+    EG
+    NEG
+    NON
 
 
-Grammaire
+Grammar
 
     0 $accept: algo $end
 
-    1 $@1: %empty
+    1 $@1: ε
 
-    2 $@2: %empty
+    2 $@2: ε
 
     3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' $@2 block_instr FIN
 
     4 block_instr: instr
     5            | instr block_instr
 
-    6 lparam: %empty
+    6 lparam: ε
     7       | param
     8       | param ',' lparam
 
     9 param: VARNAME
 
    10 instr: SET '{' VARNAME '}' '{' expr '}'
-   11      | RETURN '{' expr '}'
-   12      | IF '{' expr '}' if block_instr esle fi FI
-   13      | IF '{' expr '}' if block_instr ELSE esle block_instr fi FI
-   14      | DOWHILE begin_while '{' expr '}' while block_instr elihw OD
+   11      | IF '{' expr '}' if block_instr else fi FI
+   12      | IF '{' expr '}' if block_instr ELSE else block_instr fi FI
+   13      | DOWHILE begin_while '{' expr '}' while block_instr fwhile OD
+   14      | RETURN '{' expr '}'
 
-   15 if: %empty
+   15 if: ε
 
-   16 esle: %empty
+   16 else: ε
 
-   17 fi: %empty
+   17 fi: ε
 
-   18 begin_while: %empty
+   18 begin_while: ε
 
-   19 while: %empty
+   19 while: ε
 
-   20 elihw: %empty
+   20 fwhile: ε
 
    21 expr: VARNAME
    22     | NUMBER
@@ -48,1409 +55,892 @@ Grammaire
    26     | expr '/' expr
    27     | VRAI
    28     | FAUX
-   29     | expr INF expr
-   30     | expr INFEG expr
-   31     | expr SUP expr
-   32     | expr SUPEG expr
-   33     | expr EG expr
-   34     | expr NEG expr
-   35     | expr OU expr
-   36     | expr ET expr
-   37     | NON expr
-   38     | CALL '{' VARNAME '}' '{' lexpr '}'
-   39     | '(' expr ')'
+   29     | CALL '{' VARNAME '}' '{' lexpr '}'
+   30     | '(' expr ')'
 
-   40 lexpr: tmp_expr
-   41      | tmp_expr ',' lexpr
+   31 lexpr: tmp_expr
+   32      | tmp_expr ',' lexpr
 
-   42 tmp_expr: expr
+   33 tmp_expr: expr
 
 
-Terminaux, suivis des règles où ils apparaissent
+Terminals, with rules where they appear
 
     $end (0) 0
-    '(' (40) 39
-    ')' (41) 39
+    '(' (40) 30
+    ')' (41) 30
     '*' (42) 25
     '+' (43) 23
-    ',' (44) 8 41
+    ',' (44) 8 32
     '-' (45) 24
     '/' (47) 26
-    '{' (123) 3 10 11 12 13 14 38
-    '}' (125) 3 10 11 12 13 14 38
+    '{' (123) 3 10 11 12 13 14 29
+    '}' (125) 3 10 11 12 13 14 29
     error (256)
     NUMBER <integer> (258) 22
-    VARNAME <var_name> (259) 3 9 10 21 38
+    VARNAME <var_name> (259) 3 9 10 21 29
     DEB (260) 3
     FIN (261) 3
     SET (262) 10
-    RETURN (263) 11
-    IF (264) 12 13
-    FI (265) 12 13
-    ELSE (266) 13
-    DOWHILE (267) 14
-    OD (268) 14
+    RETURN (263) 14
+    IF (264) 11 12
+    FI (265) 11 12
+    ELSE (266) 12
+    DOWHILE (267) 13
+    OD (268) 13
     DOFORI (269)
-    OU (270) 35
-    ET (271) 36
-    INF (272) 29
-    INFEG (273) 30
-    SUP (274) 31
-    SUPEG (275) 32
-    VRAI (276) 27
-    FAUX (277) 28
-    EG (278) 33
-    NEG (279) 34
-    CALL (280) 38
-    NON (281) 37
+    OU (270)
+    ET (271)
+    INF (272)
+    INFEG (273)
+    VRAI (274) 27
+    FAUX (275) 28
+    EG (276)
+    NEG (277)
+    CALL (278) 29
+    NON (279)
 
 
-Non-terminaux, suivis des règles où ils apparaissent
+Nonterminals, with rules where they appear
 
-    $accept (36)
-        à gauche: 0
-    algo (37)
-        à gauche: 3
-        à droite: 0
-    $@1 (38)
-        à gauche: 1
-        à droite: 3
-    $@2 (39)
-        à gauche: 2
-        à droite: 3
-    block_instr (40)
-        à gauche: 4 5
-        à droite: 3 5 12 13 14
-    lparam (41)
-        à gauche: 6 7 8
-        à droite: 3 8
-    param (42)
-        à gauche: 9
-        à droite: 7 8
-    instr <s> (43)
-        à gauche: 10 11 12 13 14
-        à droite: 4 5
-    if (44)
-        à gauche: 15
-        à droite: 12 13
-    esle (45)
-        à gauche: 16
-        à droite: 12 13
-    fi (46)
-        à gauche: 17
-        à droite: 12 13
-    begin_while (47)
-        à gauche: 18
-        à droite: 14
-    while (48)
-        à gauche: 19
-        à droite: 14
-    elihw (49)
-        à gauche: 20
-        à droite: 14
-    expr <s> (50)
-        à gauche: 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
-        à droite: 10 11 12 13 14 23 24 25 26 29 30 31 32 33 34 35 36 37 39 42
-    lexpr (51)
-        à gauche: 40 41
-        à droite: 38 41
-    tmp_expr (52)
-        à gauche: 42
-        à droite: 40 41
+    $accept (34)
+        on left: 0
+    algo (35)
+        on left: 3
+        on right: 0
+    $@1 (36)
+        on left: 1
+        on right: 3
+    $@2 (37)
+        on left: 2
+        on right: 3
+    block_instr (38)
+        on left: 4 5
+        on right: 3 5 11 12 13
+    lparam (39)
+        on left: 6 7 8
+        on right: 3 8
+    param (40)
+        on left: 9
+        on right: 7 8
+    instr <s> (41)
+        on left: 10 11 12 13 14
+        on right: 4 5
+    if (42)
+        on left: 15
+        on right: 11 12
+    else (43)
+        on left: 16
+        on right: 11 12
+    fi (44)
+        on left: 17
+        on right: 11 12
+    begin_while (45)
+        on left: 18
+        on right: 13
+    while (46)
+        on left: 19
+        on right: 13
+    fwhile (47)
+        on left: 20
+        on right: 13
+    expr <s> (48)
+        on left: 21 22 23 24 25 26 27 28 29 30
+        on right: 10 11 12 13 14 23 24 25 26 30 33
+    lexpr (49)
+        on left: 31 32
+        on right: 29 32
+    tmp_expr (50)
+        on left: 33
+        on right: 31 32
 
 
-État 0
+State 0
 
-    0 $accept: . algo $end
+    0 $accept: • algo $end
 
-    DEB  décalage et aller à l'état 1
+    DEB  shift, and go to state 1
 
-    algo  aller à l'état 2
+    algo  go to state 2
 
 
-État 1
+State 1
 
-    3 algo: DEB . '{' VARNAME '}' $@1 '{' lparam '}' $@2 block_instr FIN
+    3 algo: DEB • '{' VARNAME '}' $@1 '{' lparam '}' $@2 block_instr FIN
 
-    '{'  décalage et aller à l'état 3
+    '{'  shift, and go to state 3
 
 
-État 2
+State 2
 
-    0 $accept: algo . $end
+    0 $accept: algo • $end
 
-    $end  décalage et aller à l'état 4
+    $end  shift, and go to state 4
 
 
-État 3
+State 3
 
-    3 algo: DEB '{' . VARNAME '}' $@1 '{' lparam '}' $@2 block_instr FIN
+    3 algo: DEB '{' • VARNAME '}' $@1 '{' lparam '}' $@2 block_instr FIN
 
-    VARNAME  décalage et aller à l'état 5
+    VARNAME  shift, and go to state 5
 
 
-État 4
+State 4
 
-    0 $accept: algo $end .
+    0 $accept: algo $end •
 
-    $défaut  accepter
+    $default  accept
 
 
-État 5
+State 5
 
-    3 algo: DEB '{' VARNAME . '}' $@1 '{' lparam '}' $@2 block_instr FIN
+    3 algo: DEB '{' VARNAME • '}' $@1 '{' lparam '}' $@2 block_instr FIN
 
-    '}'  décalage et aller à l'état 6
+    '}'  shift, and go to state 6
 
 
-État 6
+State 6
 
-    3 algo: DEB '{' VARNAME '}' . $@1 '{' lparam '}' $@2 block_instr FIN
+    3 algo: DEB '{' VARNAME '}' • $@1 '{' lparam '}' $@2 block_instr FIN
 
-    $défaut  réduction par utilisation de la règle 1 ($@1)
+    $default  reduce using rule 1 ($@1)
 
-    $@1  aller à l'état 7
+    $@1  go to state 7
 
 
-État 7
+State 7
 
-    3 algo: DEB '{' VARNAME '}' $@1 . '{' lparam '}' $@2 block_instr FIN
+    3 algo: DEB '{' VARNAME '}' $@1 • '{' lparam '}' $@2 block_instr FIN
 
-    '{'  décalage et aller à l'état 8
+    '{'  shift, and go to state 8
 
 
-État 8
+State 8
 
-    3 algo: DEB '{' VARNAME '}' $@1 '{' . lparam '}' $@2 block_instr FIN
+    3 algo: DEB '{' VARNAME '}' $@1 '{' • lparam '}' $@2 block_instr FIN
 
-    VARNAME  décalage et aller à l'état 9
+    VARNAME  shift, and go to state 9
 
-    $défaut  réduction par utilisation de la règle 6 (lparam)
+    $default  reduce using rule 6 (lparam)
 
-    lparam  aller à l'état 10
-    param   aller à l'état 11
+    lparam  go to state 10
+    param   go to state 11
 
 
-État 9
+State 9
 
-    9 param: VARNAME .
+    9 param: VARNAME •
 
-    $défaut  réduction par utilisation de la règle 9 (param)
+    $default  reduce using rule 9 (param)
 
 
-État 10
+State 10
 
-    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam . '}' $@2 block_instr FIN
+    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam • '}' $@2 block_instr FIN
 
-    '}'  décalage et aller à l'état 12
+    '}'  shift, and go to state 12
 
 
-État 11
+State 11
 
-    7 lparam: param .
-    8       | param . ',' lparam
+    7 lparam: param •
+    8       | param • ',' lparam
 
-    ','  décalage et aller à l'état 13
+    ','  shift, and go to state 13
 
-    $défaut  réduction par utilisation de la règle 7 (lparam)
+    $default  reduce using rule 7 (lparam)
 
 
-État 12
+State 12
 
-    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' . $@2 block_instr FIN
+    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' • $@2 block_instr FIN
 
-    $défaut  réduction par utilisation de la règle 2 ($@2)
+    $default  reduce using rule 2 ($@2)
 
-    $@2  aller à l'état 14
+    $@2  go to state 14
 
 
-État 13
+State 13
 
-    8 lparam: param ',' . lparam
+    8 lparam: param ',' • lparam
 
-    VARNAME  décalage et aller à l'état 9
+    VARNAME  shift, and go to state 9
 
-    $défaut  réduction par utilisation de la règle 6 (lparam)
+    $default  reduce using rule 6 (lparam)
 
-    lparam  aller à l'état 15
-    param   aller à l'état 11
+    lparam  go to state 15
+    param   go to state 11
 
 
-État 14
+State 14
 
-    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' $@2 . block_instr FIN
+    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' $@2 • block_instr FIN
 
-    SET      décalage et aller à l'état 16
-    RETURN   décalage et aller à l'état 17
-    IF       décalage et aller à l'état 18
-    DOWHILE  décalage et aller à l'état 19
+    SET      shift, and go to state 16
+    RETURN   shift, and go to state 17
+    IF       shift, and go to state 18
+    DOWHILE  shift, and go to state 19
 
-    block_instr  aller à l'état 20
-    instr        aller à l'état 21
+    block_instr  go to state 20
+    instr        go to state 21
 
 
-État 15
+State 15
 
-    8 lparam: param ',' lparam .
+    8 lparam: param ',' lparam •
 
-    $défaut  réduction par utilisation de la règle 8 (lparam)
+    $default  reduce using rule 8 (lparam)
 
 
-État 16
+State 16
 
-   10 instr: SET . '{' VARNAME '}' '{' expr '}'
+   10 instr: SET • '{' VARNAME '}' '{' expr '}'
 
-    '{'  décalage et aller à l'état 22
+    '{'  shift, and go to state 22
 
 
-État 17
+State 17
 
-   11 instr: RETURN . '{' expr '}'
+   14 instr: RETURN • '{' expr '}'
 
-    '{'  décalage et aller à l'état 23
+    '{'  shift, and go to state 23
 
 
-État 18
+State 18
 
-   12 instr: IF . '{' expr '}' if block_instr esle fi FI
-   13      | IF . '{' expr '}' if block_instr ELSE esle block_instr fi FI
+   11 instr: IF • '{' expr '}' if block_instr else fi FI
+   12      | IF • '{' expr '}' if block_instr ELSE else block_instr fi FI
 
-    '{'  décalage et aller à l'état 24
+    '{'  shift, and go to state 24
 
 
-État 19
+State 19
 
-   14 instr: DOWHILE . begin_while '{' expr '}' while block_instr elihw OD
+   13 instr: DOWHILE • begin_while '{' expr '}' while block_instr fwhile OD
 
-    $défaut  réduction par utilisation de la règle 18 (begin_while)
+    $default  reduce using rule 18 (begin_while)
 
-    begin_while  aller à l'état 25
+    begin_while  go to state 25
 
 
-État 20
+State 20
 
-    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' $@2 block_instr . FIN
+    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' $@2 block_instr • FIN
 
-    FIN  décalage et aller à l'état 26
+    FIN  shift, and go to state 26
 
 
-État 21
+State 21
 
-    4 block_instr: instr .
-    5            | instr . block_instr
+    4 block_instr: instr •
+    5            | instr • block_instr
 
-    SET      décalage et aller à l'état 16
-    RETURN   décalage et aller à l'état 17
-    IF       décalage et aller à l'état 18
-    DOWHILE  décalage et aller à l'état 19
+    SET      shift, and go to state 16
+    RETURN   shift, and go to state 17
+    IF       shift, and go to state 18
+    DOWHILE  shift, and go to state 19
 
-    $défaut  réduction par utilisation de la règle 4 (block_instr)
+    $default  reduce using rule 4 (block_instr)
 
-    block_instr  aller à l'état 27
-    instr        aller à l'état 21
+    block_instr  go to state 27
+    instr        go to state 21
 
 
-État 22
+State 22
 
-   10 instr: SET '{' . VARNAME '}' '{' expr '}'
+   10 instr: SET '{' • VARNAME '}' '{' expr '}'
 
-    VARNAME  décalage et aller à l'état 28
+    VARNAME  shift, and go to state 28
 
 
-État 23
+State 23
 
-   11 instr: RETURN '{' . expr '}'
+   14 instr: RETURN '{' • expr '}'
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+    NUMBER   shift, and go to state 29
+    VARNAME  shift, and go to state 30
+    VRAI     shift, and go to state 31
+    FAUX     shift, and go to state 32
+    CALL     shift, and go to state 33
+    '('      shift, and go to state 34
 
-    expr  aller à l'état 36
+    expr  go to state 35
 
 
-État 24
+State 24
 
-   12 instr: IF '{' . expr '}' if block_instr esle fi FI
-   13      | IF '{' . expr '}' if block_instr ELSE esle block_instr fi FI
+   11 instr: IF '{' • expr '}' if block_instr else fi FI
+   12      | IF '{' • expr '}' if block_instr ELSE else block_instr fi FI
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+    NUMBER   shift, and go to state 29
+    VARNAME  shift, and go to state 30
+    VRAI     shift, and go to state 31
+    FAUX     shift, and go to state 32
+    CALL     shift, and go to state 33
+    '('      shift, and go to state 34
 
-    expr  aller à l'état 37
+    expr  go to state 36
 
 
-État 25
+State 25
 
-   14 instr: DOWHILE begin_while . '{' expr '}' while block_instr elihw OD
+   13 instr: DOWHILE begin_while • '{' expr '}' while block_instr fwhile OD
 
-    '{'  décalage et aller à l'état 38
+    '{'  shift, and go to state 37
 
 
-État 26
+State 26
 
-    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' $@2 block_instr FIN .
+    3 algo: DEB '{' VARNAME '}' $@1 '{' lparam '}' $@2 block_instr FIN •
 
-    $défaut  réduction par utilisation de la règle 3 (algo)
+    $default  reduce using rule 3 (algo)
 
 
-État 27
+State 27
 
-    5 block_instr: instr block_instr .
+    5 block_instr: instr block_instr •
 
-    $défaut  réduction par utilisation de la règle 5 (block_instr)
+    $default  reduce using rule 5 (block_instr)
 
 
-État 28
+State 28
 
-   10 instr: SET '{' VARNAME . '}' '{' expr '}'
+   10 instr: SET '{' VARNAME • '}' '{' expr '}'
 
-    '}'  décalage et aller à l'état 39
+    '}'  shift, and go to state 38
 
 
-État 29
+State 29
 
-   22 expr: NUMBER .
+   22 expr: NUMBER •
 
-    $défaut  réduction par utilisation de la règle 22 (expr)
+    $default  reduce using rule 22 (expr)
 
 
-État 30
+State 30
 
-   21 expr: VARNAME .
+   21 expr: VARNAME •
 
-    $défaut  réduction par utilisation de la règle 21 (expr)
+    $default  reduce using rule 21 (expr)
 
 
-État 31
+State 31
 
-   27 expr: VRAI .
+   27 expr: VRAI •
 
-    $défaut  réduction par utilisation de la règle 27 (expr)
+    $default  reduce using rule 27 (expr)
 
 
-État 32
+State 32
 
-   28 expr: FAUX .
+   28 expr: FAUX •
 
-    $défaut  réduction par utilisation de la règle 28 (expr)
+    $default  reduce using rule 28 (expr)
 
 
-État 33
+State 33
 
-   38 expr: CALL . '{' VARNAME '}' '{' lexpr '}'
+   29 expr: CALL • '{' VARNAME '}' '{' lexpr '}'
 
-    '{'  décalage et aller à l'état 40
+    '{'  shift, and go to state 39
 
 
-État 34
+State 34
 
-   37 expr: NON . expr
+   30 expr: '(' • expr ')'
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+    NUMBER   shift, and go to state 29
+    VARNAME  shift, and go to state 30
+    VRAI     shift, and go to state 31
+    FAUX     shift, and go to state 32
+    CALL     shift, and go to state 33
+    '('      shift, and go to state 34
 
-    expr  aller à l'état 41
+    expr  go to state 40
 
 
-État 35
+State 35
 
-   39 expr: '(' . expr ')'
+   14 instr: RETURN '{' expr • '}'
+   23 expr: expr • '+' expr
+   24     | expr • '-' expr
+   25     | expr • '*' expr
+   26     | expr • '/' expr
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+    '+'  shift, and go to state 41
+    '-'  shift, and go to state 42
+    '*'  shift, and go to state 43
+    '/'  shift, and go to state 44
+    '}'  shift, and go to state 45
 
-    expr  aller à l'état 42
 
+State 36
 
-État 36
+   11 instr: IF '{' expr • '}' if block_instr else fi FI
+   12      | IF '{' expr • '}' if block_instr ELSE else block_instr fi FI
+   23 expr: expr • '+' expr
+   24     | expr • '-' expr
+   25     | expr • '*' expr
+   26     | expr • '/' expr
 
-   11 instr: RETURN '{' expr . '}'
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
+    '+'  shift, and go to state 41
+    '-'  shift, and go to state 42
+    '*'  shift, and go to state 43
+    '/'  shift, and go to state 44
+    '}'  shift, and go to state 46
 
-    OU     décalage et aller à l'état 43
-    ET     décalage et aller à l'état 44
-    INF    décalage et aller à l'état 45
-    INFEG  décalage et aller à l'état 46
-    SUP    décalage et aller à l'état 47
-    SUPEG  décalage et aller à l'état 48
-    EG     décalage et aller à l'état 49
-    NEG    décalage et aller à l'état 50
-    '+'    décalage et aller à l'état 51
-    '-'    décalage et aller à l'état 52
-    '*'    décalage et aller à l'état 53
-    '/'    décalage et aller à l'état 54
-    '}'    décalage et aller à l'état 55
 
+State 37
 
-État 37
+   13 instr: DOWHILE begin_while '{' • expr '}' while block_instr fwhile OD
 
-   12 instr: IF '{' expr . '}' if block_instr esle fi FI
-   13      | IF '{' expr . '}' if block_instr ELSE esle block_instr fi FI
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
+    NUMBER   shift, and go to state 29
+    VARNAME  shift, and go to state 30
+    VRAI     shift, and go to state 31
+    FAUX     shift, and go to state 32
+    CALL     shift, and go to state 33
+    '('      shift, and go to state 34
 
-    OU     décalage et aller à l'état 43
-    ET     décalage et aller à l'état 44
-    INF    décalage et aller à l'état 45
-    INFEG  décalage et aller à l'état 46
-    SUP    décalage et aller à l'état 47
-    SUPEG  décalage et aller à l'état 48
-    EG     décalage et aller à l'état 49
-    NEG    décalage et aller à l'état 50
-    '+'    décalage et aller à l'état 51
-    '-'    décalage et aller à l'état 52
-    '*'    décalage et aller à l'état 53
-    '/'    décalage et aller à l'état 54
-    '}'    décalage et aller à l'état 56
+    expr  go to state 47
 
 
-État 38
+State 38
 
-   14 instr: DOWHILE begin_while '{' . expr '}' while block_instr elihw OD
+   10 instr: SET '{' VARNAME '}' • '{' expr '}'
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+    '{'  shift, and go to state 48
 
-    expr  aller à l'état 57
 
+State 39
 
-État 39
+   29 expr: CALL '{' • VARNAME '}' '{' lexpr '}'
 
-   10 instr: SET '{' VARNAME '}' . '{' expr '}'
+    VARNAME  shift, and go to state 49
 
-    '{'  décalage et aller à l'état 58
 
+State 40
 
-État 40
+   23 expr: expr • '+' expr
+   24     | expr • '-' expr
+   25     | expr • '*' expr
+   26     | expr • '/' expr
+   30     | '(' expr • ')'
 
-   38 expr: CALL '{' . VARNAME '}' '{' lexpr '}'
+    '+'  shift, and go to state 41
+    '-'  shift, and go to state 42
+    '*'  shift, and go to state 43
+    '/'  shift, and go to state 44
+    ')'  shift, and go to state 50
 
-    VARNAME  décalage et aller à l'état 59
 
+State 41
 
-État 41
+   23 expr: expr '+' • expr
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
-   37     | NON expr .
+    NUMBER   shift, and go to state 29
+    VARNAME  shift, and go to state 30
+    VRAI     shift, and go to state 31
+    FAUX     shift, and go to state 32
+    CALL     shift, and go to state 33
+    '('      shift, and go to state 34
 
-    $défaut  réduction par utilisation de la règle 37 (expr)
+    expr  go to state 51
 
 
-État 42
+State 42
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
-   39     | '(' expr . ')'
+   24 expr: expr '-' • expr
 
-    OU     décalage et aller à l'état 43
-    ET     décalage et aller à l'état 44
-    INF    décalage et aller à l'état 45
-    INFEG  décalage et aller à l'état 46
-    SUP    décalage et aller à l'état 47
-    SUPEG  décalage et aller à l'état 48
-    EG     décalage et aller à l'état 49
-    NEG    décalage et aller à l'état 50
-    '+'    décalage et aller à l'état 51
-    '-'    décalage et aller à l'état 52
-    '*'    décalage et aller à l'état 53
-    '/'    décalage et aller à l'état 54
-    ')'    décalage et aller à l'état 60
+    NUMBER   shift, and go to state 29
+    VARNAME  shift, and go to state 30
+    VRAI     shift, and go to state 31
+    FAUX     shift, and go to state 32
+    CALL     shift, and go to state 33
+    '('      shift, and go to state 34
 
+    expr  go to state 52
 
-État 43
 
-   35 expr: expr OU . expr
+State 43
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+   25 expr: expr '*' • expr
 
-    expr  aller à l'état 61
+    NUMBER   shift, and go to state 29
+    VARNAME  shift, and go to state 30
+    VRAI     shift, and go to state 31
+    FAUX     shift, and go to state 32
+    CALL     shift, and go to state 33
+    '('      shift, and go to state 34
 
+    expr  go to state 53
 
-État 44
 
-   36 expr: expr ET . expr
+State 44
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+   26 expr: expr '/' • expr
 
-    expr  aller à l'état 62
+    NUMBER   shift, and go to state 29
+    VARNAME  shift, and go to state 30
+    VRAI     shift, and go to state 31
+    FAUX     shift, and go to state 32
+    CALL     shift, and go to state 33
+    '('      shift, and go to state 34
 
+    expr  go to state 54
 
-État 45
 
-   29 expr: expr INF . expr
+State 45
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+   14 instr: RETURN '{' expr '}' •
 
-    expr  aller à l'état 63
+    $default  reduce using rule 14 (instr)
 
 
-État 46
+State 46
 
-   30 expr: expr INFEG . expr
+   11 instr: IF '{' expr '}' • if block_instr else fi FI
+   12      | IF '{' expr '}' • if block_instr ELSE else block_instr fi FI
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+    $default  reduce using rule 15 (if)
 
-    expr  aller à l'état 64
+    if  go to state 55
 
 
-État 47
+State 47
 
-   31 expr: expr SUP . expr
+   13 instr: DOWHILE begin_while '{' expr • '}' while block_instr fwhile OD
+   23 expr: expr • '+' expr
+   24     | expr • '-' expr
+   25     | expr • '*' expr
+   26     | expr • '/' expr
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+    '+'  shift, and go to state 41
+    '-'  shift, and go to state 42
+    '*'  shift, and go to state 43
+    '/'  shift, and go to state 44
+    '}'  shift, and go to state 56
 
-    expr  aller à l'état 65
 
+State 48
 
-État 48
+   10 instr: SET '{' VARNAME '}' '{' • expr '}'
 
-   32 expr: expr SUPEG . expr
+    NUMBER   shift, and go to state 29
+    VARNAME  shift, and go to state 30
+    VRAI     shift, and go to state 31
+    FAUX     shift, and go to state 32
+    CALL     shift, and go to state 33
+    '('      shift, and go to state 34
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+    expr  go to state 57
 
-    expr  aller à l'état 66
 
+State 49
 
-État 49
+   29 expr: CALL '{' VARNAME • '}' '{' lexpr '}'
 
-   33 expr: expr EG . expr
+    '}'  shift, and go to state 58
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
 
-    expr  aller à l'état 67
+State 50
 
+   30 expr: '(' expr ')' •
 
-État 50
+    $default  reduce using rule 30 (expr)
 
-   34 expr: expr NEG . expr
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+State 51
 
-    expr  aller à l'état 68
+   23 expr: expr • '+' expr
+   23     | expr '+' expr •
+   24     | expr • '-' expr
+   25     | expr • '*' expr
+   26     | expr • '/' expr
 
+    '*'  shift, and go to state 43
+    '/'  shift, and go to state 44
 
-État 51
+    $default  reduce using rule 23 (expr)
 
-   23 expr: expr '+' . expr
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+State 52
 
-    expr  aller à l'état 69
+   23 expr: expr • '+' expr
+   24     | expr • '-' expr
+   24     | expr '-' expr •
+   25     | expr • '*' expr
+   26     | expr • '/' expr
 
+    '*'  shift, and go to state 43
+    '/'  shift, and go to state 44
 
-État 52
+    $default  reduce using rule 24 (expr)
 
-   24 expr: expr '-' . expr
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+State 53
 
-    expr  aller à l'état 70
+   23 expr: expr • '+' expr
+   24     | expr • '-' expr
+   25     | expr • '*' expr
+   25     | expr '*' expr •
+   26     | expr • '/' expr
 
+    $default  reduce using rule 25 (expr)
 
-État 53
 
-   25 expr: expr '*' . expr
+State 54
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+   23 expr: expr • '+' expr
+   24     | expr • '-' expr
+   25     | expr • '*' expr
+   26     | expr • '/' expr
+   26     | expr '/' expr •
 
-    expr  aller à l'état 71
+    $default  reduce using rule 26 (expr)
 
 
-État 54
+State 55
 
-   26 expr: expr '/' . expr
+   11 instr: IF '{' expr '}' if • block_instr else fi FI
+   12      | IF '{' expr '}' if • block_instr ELSE else block_instr fi FI
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+    SET      shift, and go to state 16
+    RETURN   shift, and go to state 17
+    IF       shift, and go to state 18
+    DOWHILE  shift, and go to state 19
 
-    expr  aller à l'état 72
+    block_instr  go to state 59
+    instr        go to state 21
 
 
-État 55
+State 56
 
-   11 instr: RETURN '{' expr '}' .
+   13 instr: DOWHILE begin_while '{' expr '}' • while block_instr fwhile OD
 
-    $défaut  réduction par utilisation de la règle 11 (instr)
+    $default  reduce using rule 19 (while)
 
+    while  go to state 60
 
-État 56
 
-   12 instr: IF '{' expr '}' . if block_instr esle fi FI
-   13      | IF '{' expr '}' . if block_instr ELSE esle block_instr fi FI
+State 57
 
-    $défaut  réduction par utilisation de la règle 15 (if)
+   10 instr: SET '{' VARNAME '}' '{' expr • '}'
+   23 expr: expr • '+' expr
+   24     | expr • '-' expr
+   25     | expr • '*' expr
+   26     | expr • '/' expr
 
-    if  aller à l'état 73
+    '+'  shift, and go to state 41
+    '-'  shift, and go to state 42
+    '*'  shift, and go to state 43
+    '/'  shift, and go to state 44
+    '}'  shift, and go to state 61
 
 
-État 57
+State 58
 
-   14 instr: DOWHILE begin_while '{' expr . '}' while block_instr elihw OD
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
+   29 expr: CALL '{' VARNAME '}' • '{' lexpr '}'
 
-    OU     décalage et aller à l'état 43
-    ET     décalage et aller à l'état 44
-    INF    décalage et aller à l'état 45
-    INFEG  décalage et aller à l'état 46
-    SUP    décalage et aller à l'état 47
-    SUPEG  décalage et aller à l'état 48
-    EG     décalage et aller à l'état 49
-    NEG    décalage et aller à l'état 50
-    '+'    décalage et aller à l'état 51
-    '-'    décalage et aller à l'état 52
-    '*'    décalage et aller à l'état 53
-    '/'    décalage et aller à l'état 54
-    '}'    décalage et aller à l'état 74
+    '{'  shift, and go to state 62
 
 
-État 58
+State 59
 
-   10 instr: SET '{' VARNAME '}' '{' . expr '}'
+   11 instr: IF '{' expr '}' if block_instr • else fi FI
+   12      | IF '{' expr '}' if block_instr • ELSE else block_instr fi FI
 
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
+    ELSE  shift, and go to state 63
 
-    expr  aller à l'état 75
+    $default  reduce using rule 16 (else)
 
+    else  go to state 64
 
-État 59
 
-   38 expr: CALL '{' VARNAME . '}' '{' lexpr '}'
+State 60
 
-    '}'  décalage et aller à l'état 76
+   13 instr: DOWHILE begin_while '{' expr '}' while • block_instr fwhile OD
 
+    SET      shift, and go to state 16
+    RETURN   shift, and go to state 17
+    IF       shift, and go to state 18
+    DOWHILE  shift, and go to state 19
 
-État 60
+    block_instr  go to state 65
+    instr        go to state 21
 
-   39 expr: '(' expr ')' .
 
-    $défaut  réduction par utilisation de la règle 39 (expr)
+State 61
 
+   10 instr: SET '{' VARNAME '}' '{' expr '}' •
 
-État 61
+    $default  reduce using rule 10 (instr)
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   35     | expr OU expr .
-   36     | expr . ET expr
 
-    ET     décalage et aller à l'état 44
-    INF    décalage et aller à l'état 45
-    INFEG  décalage et aller à l'état 46
-    SUP    décalage et aller à l'état 47
-    SUPEG  décalage et aller à l'état 48
-    EG     décalage et aller à l'état 49
-    NEG    décalage et aller à l'état 50
-    '+'    décalage et aller à l'état 51
-    '-'    décalage et aller à l'état 52
-    '*'    décalage et aller à l'état 53
-    '/'    décalage et aller à l'état 54
+State 62
 
-    $défaut  réduction par utilisation de la règle 35 (expr)
+   29 expr: CALL '{' VARNAME '}' '{' • lexpr '}'
 
+    NUMBER   shift, and go to state 29
+    VARNAME  shift, and go to state 30
+    VRAI     shift, and go to state 31
+    FAUX     shift, and go to state 32
+    CALL     shift, and go to state 33
+    '('      shift, and go to state 34
 
-État 62
+    expr      go to state 66
+    lexpr     go to state 67
+    tmp_expr  go to state 68
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
-   36     | expr ET expr .
 
-    INF    décalage et aller à l'état 45
-    INFEG  décalage et aller à l'état 46
-    SUP    décalage et aller à l'état 47
-    SUPEG  décalage et aller à l'état 48
-    EG     décalage et aller à l'état 49
-    NEG    décalage et aller à l'état 50
-    '+'    décalage et aller à l'état 51
-    '-'    décalage et aller à l'état 52
-    '*'    décalage et aller à l'état 53
-    '/'    décalage et aller à l'état 54
+State 63
 
-    $défaut  réduction par utilisation de la règle 36 (expr)
+   12 instr: IF '{' expr '}' if block_instr ELSE • else block_instr fi FI
 
+    $default  reduce using rule 16 (else)
 
-État 63
+    else  go to state 69
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   29     | expr INF expr .
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
 
-    EG   décalage et aller à l'état 49
-    NEG  décalage et aller à l'état 50
-    '+'  décalage et aller à l'état 51
-    '-'  décalage et aller à l'état 52
-    '*'  décalage et aller à l'état 53
-    '/'  décalage et aller à l'état 54
+State 64
 
-    $défaut  réduction par utilisation de la règle 29 (expr)
+   11 instr: IF '{' expr '}' if block_instr else • fi FI
 
+    $default  reduce using rule 17 (fi)
 
-État 64
+    fi  go to state 70
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   30     | expr INFEG expr .
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
 
-    EG   décalage et aller à l'état 49
-    NEG  décalage et aller à l'état 50
-    '+'  décalage et aller à l'état 51
-    '-'  décalage et aller à l'état 52
-    '*'  décalage et aller à l'état 53
-    '/'  décalage et aller à l'état 54
+State 65
 
-    $défaut  réduction par utilisation de la règle 30 (expr)
+   13 instr: DOWHILE begin_while '{' expr '}' while block_instr • fwhile OD
 
+    $default  reduce using rule 20 (fwhile)
 
-État 65
+    fwhile  go to state 71
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   31     | expr SUP expr .
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
 
-    EG   décalage et aller à l'état 49
-    NEG  décalage et aller à l'état 50
-    '+'  décalage et aller à l'état 51
-    '-'  décalage et aller à l'état 52
-    '*'  décalage et aller à l'état 53
-    '/'  décalage et aller à l'état 54
+State 66
 
-    $défaut  réduction par utilisation de la règle 31 (expr)
+   23 expr: expr • '+' expr
+   24     | expr • '-' expr
+   25     | expr • '*' expr
+   26     | expr • '/' expr
+   33 tmp_expr: expr •
 
+    '+'  shift, and go to state 41
+    '-'  shift, and go to state 42
+    '*'  shift, and go to state 43
+    '/'  shift, and go to state 44
 
-État 66
+    $default  reduce using rule 33 (tmp_expr)
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   32     | expr SUPEG expr .
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
 
-    EG   décalage et aller à l'état 49
-    NEG  décalage et aller à l'état 50
-    '+'  décalage et aller à l'état 51
-    '-'  décalage et aller à l'état 52
-    '*'  décalage et aller à l'état 53
-    '/'  décalage et aller à l'état 54
+State 67
 
-    $défaut  réduction par utilisation de la règle 32 (expr)
+   29 expr: CALL '{' VARNAME '}' '{' lexpr • '}'
 
+    '}'  shift, and go to state 72
 
-État 67
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   33     | expr EG expr .
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
+State 68
 
-    '+'  décalage et aller à l'état 51
-    '-'  décalage et aller à l'état 52
-    '*'  décalage et aller à l'état 53
-    '/'  décalage et aller à l'état 54
+   31 lexpr: tmp_expr •
+   32      | tmp_expr • ',' lexpr
 
-    $défaut  réduction par utilisation de la règle 33 (expr)
+    ','  shift, and go to state 73
 
+    $default  reduce using rule 31 (lexpr)
 
-État 68
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   34     | expr NEG expr .
-   35     | expr . OU expr
-   36     | expr . ET expr
+State 69
 
-    '+'  décalage et aller à l'état 51
-    '-'  décalage et aller à l'état 52
-    '*'  décalage et aller à l'état 53
-    '/'  décalage et aller à l'état 54
+   12 instr: IF '{' expr '}' if block_instr ELSE else • block_instr fi FI
 
-    $défaut  réduction par utilisation de la règle 34 (expr)
+    SET      shift, and go to state 16
+    RETURN   shift, and go to state 17
+    IF       shift, and go to state 18
+    DOWHILE  shift, and go to state 19
 
+    block_instr  go to state 74
+    instr        go to state 21
 
-État 69
 
-   23 expr: expr . '+' expr
-   23     | expr '+' expr .
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
+State 70
 
-    '*'  décalage et aller à l'état 53
-    '/'  décalage et aller à l'état 54
+   11 instr: IF '{' expr '}' if block_instr else fi • FI
 
-    $défaut  réduction par utilisation de la règle 23 (expr)
+    FI  shift, and go to state 75
 
 
-État 70
+State 71
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   24     | expr '-' expr .
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
+   13 instr: DOWHILE begin_while '{' expr '}' while block_instr fwhile • OD
 
-    '*'  décalage et aller à l'état 53
-    '/'  décalage et aller à l'état 54
+    OD  shift, and go to state 76
 
-    $défaut  réduction par utilisation de la règle 24 (expr)
 
+State 72
 
-État 71
+   29 expr: CALL '{' VARNAME '}' '{' lexpr '}' •
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   25     | expr '*' expr .
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
+    $default  reduce using rule 29 (expr)
 
-    $défaut  réduction par utilisation de la règle 25 (expr)
 
+State 73
 
-État 72
+   32 lexpr: tmp_expr ',' • lexpr
 
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   26     | expr '/' expr .
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
+    NUMBER   shift, and go to state 29
+    VARNAME  shift, and go to state 30
+    VRAI     shift, and go to state 31
+    FAUX     shift, and go to state 32
+    CALL     shift, and go to state 33
+    '('      shift, and go to state 34
 
-    $défaut  réduction par utilisation de la règle 26 (expr)
+    expr      go to state 66
+    lexpr     go to state 77
+    tmp_expr  go to state 68
 
 
-État 73
+State 74
 
-   12 instr: IF '{' expr '}' if . block_instr esle fi FI
-   13      | IF '{' expr '}' if . block_instr ELSE esle block_instr fi FI
+   12 instr: IF '{' expr '}' if block_instr ELSE else block_instr • fi FI
 
-    SET      décalage et aller à l'état 16
-    RETURN   décalage et aller à l'état 17
-    IF       décalage et aller à l'état 18
-    DOWHILE  décalage et aller à l'état 19
+    $default  reduce using rule 17 (fi)
 
-    block_instr  aller à l'état 77
-    instr        aller à l'état 21
+    fi  go to state 78
 
 
-État 74
+State 75
 
-   14 instr: DOWHILE begin_while '{' expr '}' . while block_instr elihw OD
+   11 instr: IF '{' expr '}' if block_instr else fi FI •
 
-    $défaut  réduction par utilisation de la règle 19 (while)
+    $default  reduce using rule 11 (instr)
 
-    while  aller à l'état 78
 
+State 76
 
-État 75
+   13 instr: DOWHILE begin_while '{' expr '}' while block_instr fwhile OD •
 
-   10 instr: SET '{' VARNAME '}' '{' expr . '}'
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
+    $default  reduce using rule 13 (instr)
 
-    OU     décalage et aller à l'état 43
-    ET     décalage et aller à l'état 44
-    INF    décalage et aller à l'état 45
-    INFEG  décalage et aller à l'état 46
-    SUP    décalage et aller à l'état 47
-    SUPEG  décalage et aller à l'état 48
-    EG     décalage et aller à l'état 49
-    NEG    décalage et aller à l'état 50
-    '+'    décalage et aller à l'état 51
-    '-'    décalage et aller à l'état 52
-    '*'    décalage et aller à l'état 53
-    '/'    décalage et aller à l'état 54
-    '}'    décalage et aller à l'état 79
 
+State 77
 
-État 76
+   32 lexpr: tmp_expr ',' lexpr •
 
-   38 expr: CALL '{' VARNAME '}' . '{' lexpr '}'
+    $default  reduce using rule 32 (lexpr)
 
-    '{'  décalage et aller à l'état 80
 
+State 78
 
-État 77
+   12 instr: IF '{' expr '}' if block_instr ELSE else block_instr fi • FI
 
-   12 instr: IF '{' expr '}' if block_instr . esle fi FI
-   13      | IF '{' expr '}' if block_instr . ELSE esle block_instr fi FI
+    FI  shift, and go to state 79
 
-    ELSE  décalage et aller à l'état 81
 
-    $défaut  réduction par utilisation de la règle 16 (esle)
+State 79
 
-    esle  aller à l'état 82
+   12 instr: IF '{' expr '}' if block_instr ELSE else block_instr fi FI •
 
-
-État 78
-
-   14 instr: DOWHILE begin_while '{' expr '}' while . block_instr elihw OD
-
-    SET      décalage et aller à l'état 16
-    RETURN   décalage et aller à l'état 17
-    IF       décalage et aller à l'état 18
-    DOWHILE  décalage et aller à l'état 19
-
-    block_instr  aller à l'état 83
-    instr        aller à l'état 21
-
-
-État 79
-
-   10 instr: SET '{' VARNAME '}' '{' expr '}' .
-
-    $défaut  réduction par utilisation de la règle 10 (instr)
-
-
-État 80
-
-   38 expr: CALL '{' VARNAME '}' '{' . lexpr '}'
-
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
-
-    expr      aller à l'état 84
-    lexpr     aller à l'état 85
-    tmp_expr  aller à l'état 86
-
-
-État 81
-
-   13 instr: IF '{' expr '}' if block_instr ELSE . esle block_instr fi FI
-
-    $défaut  réduction par utilisation de la règle 16 (esle)
-
-    esle  aller à l'état 87
-
-
-État 82
-
-   12 instr: IF '{' expr '}' if block_instr esle . fi FI
-
-    $défaut  réduction par utilisation de la règle 17 (fi)
-
-    fi  aller à l'état 88
-
-
-État 83
-
-   14 instr: DOWHILE begin_while '{' expr '}' while block_instr . elihw OD
-
-    $défaut  réduction par utilisation de la règle 20 (elihw)
-
-    elihw  aller à l'état 89
-
-
-État 84
-
-   23 expr: expr . '+' expr
-   24     | expr . '-' expr
-   25     | expr . '*' expr
-   26     | expr . '/' expr
-   29     | expr . INF expr
-   30     | expr . INFEG expr
-   31     | expr . SUP expr
-   32     | expr . SUPEG expr
-   33     | expr . EG expr
-   34     | expr . NEG expr
-   35     | expr . OU expr
-   36     | expr . ET expr
-   42 tmp_expr: expr .
-
-    OU     décalage et aller à l'état 43
-    ET     décalage et aller à l'état 44
-    INF    décalage et aller à l'état 45
-    INFEG  décalage et aller à l'état 46
-    SUP    décalage et aller à l'état 47
-    SUPEG  décalage et aller à l'état 48
-    EG     décalage et aller à l'état 49
-    NEG    décalage et aller à l'état 50
-    '+'    décalage et aller à l'état 51
-    '-'    décalage et aller à l'état 52
-    '*'    décalage et aller à l'état 53
-    '/'    décalage et aller à l'état 54
-
-    $défaut  réduction par utilisation de la règle 42 (tmp_expr)
-
-
-État 85
-
-   38 expr: CALL '{' VARNAME '}' '{' lexpr . '}'
-
-    '}'  décalage et aller à l'état 90
-
-
-État 86
-
-   40 lexpr: tmp_expr .
-   41      | tmp_expr . ',' lexpr
-
-    ','  décalage et aller à l'état 91
-
-    $défaut  réduction par utilisation de la règle 40 (lexpr)
-
-
-État 87
-
-   13 instr: IF '{' expr '}' if block_instr ELSE esle . block_instr fi FI
-
-    SET      décalage et aller à l'état 16
-    RETURN   décalage et aller à l'état 17
-    IF       décalage et aller à l'état 18
-    DOWHILE  décalage et aller à l'état 19
-
-    block_instr  aller à l'état 92
-    instr        aller à l'état 21
-
-
-État 88
-
-   12 instr: IF '{' expr '}' if block_instr esle fi . FI
-
-    FI  décalage et aller à l'état 93
-
-
-État 89
-
-   14 instr: DOWHILE begin_while '{' expr '}' while block_instr elihw . OD
-
-    OD  décalage et aller à l'état 94
-
-
-État 90
-
-   38 expr: CALL '{' VARNAME '}' '{' lexpr '}' .
-
-    $défaut  réduction par utilisation de la règle 38 (expr)
-
-
-État 91
-
-   41 lexpr: tmp_expr ',' . lexpr
-
-    NUMBER   décalage et aller à l'état 29
-    VARNAME  décalage et aller à l'état 30
-    VRAI     décalage et aller à l'état 31
-    FAUX     décalage et aller à l'état 32
-    CALL     décalage et aller à l'état 33
-    NON      décalage et aller à l'état 34
-    '('      décalage et aller à l'état 35
-
-    expr      aller à l'état 84
-    lexpr     aller à l'état 95
-    tmp_expr  aller à l'état 86
-
-
-État 92
-
-   13 instr: IF '{' expr '}' if block_instr ELSE esle block_instr . fi FI
-
-    $défaut  réduction par utilisation de la règle 17 (fi)
-
-    fi  aller à l'état 96
-
-
-État 93
-
-   12 instr: IF '{' expr '}' if block_instr esle fi FI .
-
-    $défaut  réduction par utilisation de la règle 12 (instr)
-
-
-État 94
-
-   14 instr: DOWHILE begin_while '{' expr '}' while block_instr elihw OD .
-
-    $défaut  réduction par utilisation de la règle 14 (instr)
-
-
-État 95
-
-   41 lexpr: tmp_expr ',' lexpr .
-
-    $défaut  réduction par utilisation de la règle 41 (lexpr)
-
-
-État 96
-
-   13 instr: IF '{' expr '}' if block_instr ELSE esle block_instr fi . FI
-
-    FI  décalage et aller à l'état 97
-
-
-État 97
-
-   13 instr: IF '{' expr '}' if block_instr ELSE esle block_instr fi FI .
-
-    $défaut  réduction par utilisation de la règle 13 (instr)
+    $default  reduce using rule 12 (instr)

@@ -469,7 +469,7 @@ extern int yylex (void);
 #undef yyTABLES_NAME
 #endif
 
-#line 42 "algosipro.l"
+#line 40 "algosipro.l"
 
 
 #line 476 "lex.yy.h"

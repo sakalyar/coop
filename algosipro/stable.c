@@ -8,12 +8,12 @@
 
 //symbol_table contient un pointeur vers la première entrée de la table des symboles
 
-static symbol_table_entry *symbol_table = NULL;
+static table *symbol_table = NULL;
 
 // ajouter une entré dans la liste des symboles
-symbol_table_entry *new_symbol_table_entry(const char *name) {
-  symbol_table_entry *n;
-  if ((n = malloc(sizeof(symbol_table_entry))) == NULL) {
+table *new_table(const char *name) {
+  table *n;
+  if ((n = malloc(sizeof(table))) == NULL) {
     fprintf(stderr, "ERREUR: new_symbol_table_entry \n");
   } else {
     if ((n->name = malloc(strlen(name)+1)) == NULL) {
@@ -28,8 +28,8 @@ symbol_table_entry *new_symbol_table_entry(const char *name) {
 }
 
 // faire une recherche dans la table de symbole suivant le nom
-symbol_table_entry *search_symbol_table(const char *name) {
-  symbol_table_entry *ste = symbol_table;
+table *search(const char *name) {
+  table *ste = symbol_table;
   for ( ste = symbol_table;
         ste!=NULL && strcmp(ste->name, name);
         ste = ste->next)
@@ -38,15 +38,15 @@ symbol_table_entry *search_symbol_table(const char *name) {
 }
 
 //renvoie la premiere entré de la table des symboles
-symbol_table_entry *symbol_table_get_head(void) {
+table *table_head(void) {
 	return symbol_table;
 }
 
 /*
 cette fonction permet de libérer la mémoire allouée pour la première entrée de la liste chaînée, puis de mettre à jour la liste en supprimant cette première entrée.
 */
-void free_first_symbol_table_entry(void) {
-  symbol_table_entry *ste = symbol_table->next;
+void free_first_table(void) {
+  table *ste = symbol_table->next;
   //libère la mémoire allouée pour le champ name de la première entrée de la liste
   free((void *) symbol_table->name);
   //libère la mémoire allouée pour la première entrée elle-même.
