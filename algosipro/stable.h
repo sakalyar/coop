@@ -3,9 +3,9 @@
 
 #include "types.h"
 
-table *search(const char *name);
-table *new_table(const char *name);
-table *table_head(void);
-void free_first_table(void);
+symbol_table_entry *search(const char *name);
+symbol_table_entry *new_symbol(const char *name);
+symbol_table_entry *symbol_table_get_head(void);
+void free_first_symbol(void);
 
 #endif

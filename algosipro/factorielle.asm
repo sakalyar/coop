@@ -11,8 +11,8 @@
 	callprintfs ax
 	end
 
-:puissances
-; Récupérez la variable b et placez-la en haut de la pile
+:factorielle
+; Récupérez la variable n et placez-la en haut de la pile
 	const ax,2
 	const bx,1
 	mul ax,bx
@@ -58,25 +58,17 @@
 :else_1
 
 :fin_if_1
-; Récupérez la variable a et placez-la en haut de la pile
+; Récupérez la variable n et placez-la en haut de la pile
+	const ax,2
+	const bx,1
+	mul ax,bx
+	cp bx,sp
+	sub bx,ax
+	loadw ax,bx
+	push ax
+; Récupérez la variable n et placez-la en haut de la pile
 	const ax,2
 	const bx,2
-	mul ax,bx
-	cp bx,sp
-	sub bx,ax
-	loadw ax,bx
-	push ax
-; Récupérez la variable a et placez-la en haut de la pile
-	const ax,2
-	const bx,3
-	mul ax,bx
-	cp bx,sp
-	sub bx,ax
-	loadw ax,bx
-	push ax
-; Récupérez la variable b et placez-la en haut de la pile
-	const ax,2
-	const bx,3
 	mul ax,bx
 	cp bx,sp
 	sub bx,ax
@@ -92,11 +84,10 @@
 	sub bx,ax
 ; Pousser une variable temporaire sur la pile
 	push bx
-; Appel de la fonction  puissances
-	const bx,puissances
+; Appel de la fonction  factorielle
+	const bx,factorielle
 	call bx
 ; Pop les arguments de la fonction appelée
-	pop dx
 	pop dx
 ; Pousser une variable temporaire sur la pile
 	push ax
@@ -116,12 +107,10 @@
 	const ax,2
 	sub sp,ax
 ; construction des parametres
-	const ax,2
+	const ax,5
 	push ax
-	const ax,3
-	push ax
-; Appel de la founction puissances
-	const ax,puissances
+; Appel de la founction factorielle
+	const ax,factorielle
 	call ax
 ;recuperer le resultat et affiche le
 	push ax

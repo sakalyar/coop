@@ -7,5 +7,4 @@ typedef enum type_synth {
 	VARIABLE_INDEFINI
 } type_synth;
 
-
 #endif

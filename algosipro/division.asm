@@ -11,12 +11,8 @@
 	callprintfs ax
 	end
 
-:while
-; Nombre 5
-	const ax,5
-; Pousser une variable temporaire sur la pile
-	push ax
-; Récupérez la variable n et placez-la en haut de la pile
+:division
+; Récupérez la variable a et placez-la en haut de la pile
 	const ax,2
 	const bx,2
 	mul ax,bx
@@ -24,8 +20,23 @@
 	sub bx,ax
 	loadw ax,bx
 	push ax
+; Récupérez la variable b et placez-la en haut de la pile
+	const ax,2
+	const bx,2
+	mul ax,bx
+	cp bx,sp
+	sub bx,ax
+	loadw ax,bx
+	push ax
+; Diviser deux expressions
+	const cx,div_err
 	pop ax
-	pop dx
+	pop bx
+	div bx,ax
+	jmpe cx
+; Pousser une variable temporaire sur la pile
+	push bx
+	pop ax
 	ret
 
 :main
@@ -35,10 +46,12 @@
 	const ax,2
 	sub sp,ax
 ; construction des parametres
-	const ax,2
+	const ax,15
 	push ax
-; Appel de la founction while
-	const ax,while
+	const ax,3
+	push ax
+; Appel de la founction division
+	const ax,division
 	call ax
 ;recuperer le resultat et affiche le
 	push ax

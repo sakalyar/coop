@@ -11,42 +11,43 @@
 	callprintfs ax
 	end
 
-:addition
-; Récupérez la variable b et placez-la en haut de la pile
-	const ax,2
-	const bx,1
-	mul ax,bx
-	cp bx,sp
-	sub bx,ax
-	loadw ax,bx
-	push ax
+:ou
 ; Récupérez la variable a et placez-la en haut de la pile
 	const ax,2
-	const bx,3
+	const bx,2
 	mul ax,bx
 	cp bx,sp
 	sub bx,ax
 	loadw ax,bx
 	push ax
-; Additioner deux expressions
+; Récupérez la variable b et placez-la en haut de la pile
+	const ax,2
+	const bx,2
+	mul ax,bx
+	cp bx,sp
+	sub bx,ax
+	loadw ax,bx
+	push ax
+; Debut comparaison avec l'operateur OU_0 
 	pop ax
 	pop bx
-	add ax,bx
-; Pousser une variable temporaire sur la pile
-	push ax
-; Ajouter la variable p dans la pile
-	pop ax
-	push ax
-; Récupérez la variable p et placez-la en haut de la pile
-	const ax,2
+	or ax,bx
 	const bx,0
-	mul ax,bx
-	cp bx,sp
-	sub bx,ax
-	loadw ax,bx
+	const cx,ou_0
+	cmp ax,bx
+	jmpc cx
+; Faux cas (ID: 0)
+	const ax,1
 	push ax
+	const ax,fin_ou_0
+	jmp ax
+; Cas Vrai (ID: 0)
+:ou_0
+	const ax,0
+	push ax
+; Fin comparaison de l' operateur OU_0
+:fin_ou_0
 	pop ax
-	pop dx
 	ret
 
 :main
@@ -56,12 +57,20 @@
 	const ax,2
 	sub sp,ax
 ; construction des parametres
-	const ax,4
+	const ax,0
 	push ax
-	const ax,7
+	const ax,0
 	push ax
-; Appel de la founction addition
-	const ax,addition
+	const ax,1
+	push ax
+	const ax,1
+	push ax
+	const ax,0
+	push ax
+	const ax,0
+	push ax
+; Appel de la founction ou
+	const ax,ou
 	call ax
 ;recuperer le resultat et affiche le
 	push ax

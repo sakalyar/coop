@@ -83,35 +83,39 @@
   #include "stable.h"
   #include "type_synth.h"
 
+  #define DOS_ALGOSIPRO "../algosipro/"
   #define MAX_VAR_STRLEN 255
   #define MAXBUF 255
-  
-  #define STACK_SIZE 1024
+  // Stack
+  #define STACK_SIZE 2048
   int stack[STACK_SIZE];
   size_t stack_index = 0;
   
-  void push(int e);  
-  int top();
-  int pop();
-  void reg_push(const char *registry);
-  void reg_pop(const char *registry);
+  //La fonction push ajoute un nouvel élément e au sommet de la pile.
+  void push(int e);
   
+  int pop();
+  int top();
+
   int yylex(void);
   void yyerror(char const *);
  
   int num_label = 0;
   int numero_label();
-  void create_label(char *buf, size_t buf_size, const char *format, ...);
+  void creer_label(char *buf, size_t buf_size, const char *format, ...);
   int argument = 0;
 
-  
-  void get_asm_var(const char *name);
+  /**
+   récupération de la valeur d'une variable à partir de son nom et son insertion en haut sur la pile.
+   */
+  void get_var(const char *name);
 
-  
-  table *t = NULL;
+  void push_reg(const char *registry);
+  void reg_pop(const char *registry);
+  symbol_table_entry *ste = NULL;
   
 
-#line 115 "algosipro.tab.c"
+#line 119 "algosipro.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -158,38 +162,40 @@ enum yysymbol_kind_t
   YYSYMBOL_ET = 16,                        /* ET  */
   YYSYMBOL_INF = 17,                       /* INF  */
   YYSYMBOL_INFEG = 18,                     /* INFEG  */
-  YYSYMBOL_VRAI = 19,                      /* VRAI  */
-  YYSYMBOL_FAUX = 20,                      /* FAUX  */
-  YYSYMBOL_EG = 21,                        /* EG  */
-  YYSYMBOL_NEG = 22,                       /* NEG  */
-  YYSYMBOL_23_ = 23,                       /* '+'  */
-  YYSYMBOL_24_ = 24,                       /* '-'  */
-  YYSYMBOL_25_ = 25,                       /* '*'  */
-  YYSYMBOL_26_ = 26,                       /* '/'  */
-  YYSYMBOL_CALL = 27,                      /* CALL  */
-  YYSYMBOL_NON = 28,                       /* NON  */
-  YYSYMBOL_29_ = 29,                       /* '{'  */
-  YYSYMBOL_30_ = 30,                       /* '}'  */
-  YYSYMBOL_31_ = 31,                       /* ','  */
-  YYSYMBOL_32_ = 32,                       /* '('  */
-  YYSYMBOL_33_ = 33,                       /* ')'  */
-  YYSYMBOL_YYACCEPT = 34,                  /* $accept  */
-  YYSYMBOL_algo = 35,                      /* algo  */
-  YYSYMBOL_36_1 = 36,                      /* $@1  */
-  YYSYMBOL_37_2 = 37,                      /* $@2  */
-  YYSYMBOL_block_instr = 38,               /* block_instr  */
-  YYSYMBOL_lparam = 39,                    /* lparam  */
-  YYSYMBOL_param = 40,                     /* param  */
-  YYSYMBOL_instr = 41,                     /* instr  */
-  YYSYMBOL_if = 42,                        /* if  */
-  YYSYMBOL_else = 43,                      /* else  */
-  YYSYMBOL_fi = 44,                        /* fi  */
-  YYSYMBOL_begin_while = 45,               /* begin_while  */
-  YYSYMBOL_while = 46,                     /* while  */
-  YYSYMBOL_fwhile = 47,                    /* fwhile  */
-  YYSYMBOL_expr = 48,                      /* expr  */
-  YYSYMBOL_lexpr = 49,                     /* lexpr  */
-  YYSYMBOL_tmp_expr = 50                   /* tmp_expr  */
+  YYSYMBOL_SUP = 19,                       /* SUP  */
+  YYSYMBOL_SUPEG = 20,                     /* SUPEG  */
+  YYSYMBOL_VRAI = 21,                      /* VRAI  */
+  YYSYMBOL_FAUX = 22,                      /* FAUX  */
+  YYSYMBOL_EG = 23,                        /* EG  */
+  YYSYMBOL_NEG = 24,                       /* NEG  */
+  YYSYMBOL_25_ = 25,                       /* '+'  */
+  YYSYMBOL_26_ = 26,                       /* '-'  */
+  YYSYMBOL_27_ = 27,                       /* '*'  */
+  YYSYMBOL_28_ = 28,                       /* '/'  */
+  YYSYMBOL_CALL = 29,                      /* CALL  */
+  YYSYMBOL_NON = 30,                       /* NON  */
+  YYSYMBOL_31_ = 31,                       /* '{'  */
+  YYSYMBOL_32_ = 32,                       /* '}'  */
+  YYSYMBOL_33_ = 33,                       /* ','  */
+  YYSYMBOL_34_ = 34,                       /* '('  */
+  YYSYMBOL_35_ = 35,                       /* ')'  */
+  YYSYMBOL_YYACCEPT = 36,                  /* $accept  */
+  YYSYMBOL_algo = 37,                      /* algo  */
+  YYSYMBOL_38_1 = 38,                      /* $@1  */
+  YYSYMBOL_39_2 = 39,                      /* $@2  */
+  YYSYMBOL_block_instr = 40,               /* block_instr  */
+  YYSYMBOL_lparam = 41,                    /* lparam  */
+  YYSYMBOL_param = 42,                     /* param  */
+  YYSYMBOL_instr = 43,                     /* instr  */
+  YYSYMBOL_if = 44,                        /* if  */
+  YYSYMBOL_else = 45,                      /* else  */
+  YYSYMBOL_fi = 46,                        /* fi  */
+  YYSYMBOL_begin_while = 47,               /* begin_while  */
+  YYSYMBOL_while = 48,                     /* while  */
+  YYSYMBOL_elihw = 49,                     /* elihw  */
+  YYSYMBOL_expr = 50,                      /* expr  */
+  YYSYMBOL_lexpr = 51,                     /* lexpr  */
+  YYSYMBOL_tmp_expr = 52                   /* tmp_expr  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -517,19 +523,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  4
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   86
+#define YYLAST   183
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  34
+#define YYNTOKENS  36
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  17
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  34
+#define YYNRULES  42
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  80
+#define YYNSTATES  98
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   279
+#define YYMAXUTOK   281
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -547,7 +553,7 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      32,    33,    25,    23,    31,    24,     2,    26,     2,     2,
+      34,    35,    27,    25,    33,    26,     2,    28,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -555,7 +561,7 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    29,     2,    30,     2,     2,     2,     2,
+       2,     2,     2,    31,     2,    32,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -570,17 +576,19 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    22,    27,    28
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      29,    30
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    68,    68,    73,    68,    79,    80,    83,    84,    85,
-      90,    99,   114,   122,   131,   139,   156,   173,   186,   195,
-     206,   220,   233,   245,   253,   268,   283,   297,   316,   322,
-     329,   343,   349,   350,   354
+       0,    71,    71,    83,    71,    90,    91,    95,    96,   100,
+     109,   123,   137,   146,   154,   163,   178,   189,   196,   207,
+     220,   235,   248,   257,   272,   288,   304,   324,   331,   340,
+     381,   424,   468,   508,   548,   588,   631,   674,   714,   729,
+     735,   736,   740
 };
 #endif
 
@@ -598,11 +606,11 @@ static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "NUMBER", "VARNAME",
   "DEB", "FIN", "SET", "RETURN", "IF", "FI", "ELSE", "DOWHILE", "OD",
-  "DOFORI", "OU", "ET", "INF", "INFEG", "VRAI", "FAUX", "EG", "NEG", "'+'",
-  "'-'", "'*'", "'/'", "CALL", "NON", "'{'", "'}'", "','", "'('", "')'",
-  "$accept", "algo", "$@1", "$@2", "block_instr", "lparam", "param",
-  "instr", "if", "else", "fi", "begin_while", "while", "fwhile", "expr",
-  "lexpr", "tmp_expr", YY_NULLPTR
+  "DOFORI", "OU", "ET", "INF", "INFEG", "SUP", "SUPEG", "VRAI", "FAUX",
+  "EG", "NEG", "'+'", "'-'", "'*'", "'/'", "CALL", "NON", "'{'", "'}'",
+  "','", "'('", "')'", "$accept", "algo", "$@1", "$@2", "block_instr",
+  "lparam", "param", "instr", "if", "else", "fi", "begin_while", "while",
+  "elihw", "expr", "lexpr", "tmp_expr", YY_NULLPTR
 };
 
 static const char *
@@ -612,7 +620,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-22)
+#define YYPACT_NINF (-23)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -624,16 +632,18 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-static const yytype_int8 yypact[] =
+static const yytype_int16 yypact[] =
 {
-       2,   -13,    14,    19,   -22,    -6,   -22,    11,    27,   -22,
-      17,     1,   -22,    27,     3,   -22,    26,    34,    35,   -22,
-      43,     3,    37,    -2,    -2,    42,   -22,   -22,    45,   -22,
-     -22,   -22,   -22,    47,    -2,    12,    20,    -2,    48,    52,
-     -20,    -2,    -2,    -2,    -2,   -22,   -22,    28,    -2,    49,
-     -22,    -5,    -5,   -22,   -22,     3,   -22,    36,    51,    46,
-       3,   -22,    -2,   -22,   -22,   -22,    44,    53,    41,     3,
-      55,    60,   -22,    -2,   -22,   -22,   -22,   -22,    64,   -22
+      10,     3,    33,    31,   -23,    11,   -23,    13,    43,   -23,
+      17,    15,   -23,    43,     2,   -23,    20,    22,    23,   -23,
+      49,     2,    52,    16,    16,    27,   -23,   -23,    48,   -23,
+     -23,   -23,   -23,    34,    16,    16,    58,    76,    16,    56,
+      84,   -23,    44,    16,    16,    16,    16,    16,    16,    16,
+      16,    16,    16,    16,    16,   -23,   -23,    94,    16,    57,
+     -23,   143,   155,   -20,   -20,   -20,   -20,    14,    14,   -10,
+     -10,   -23,   -23,     2,   -23,   112,    66,    87,     2,   -23,
+      16,   -23,   -23,   -23,   130,    73,    74,     2,    96,   102,
+     -23,    16,   -23,   -23,   -23,   -23,   106,   -23
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -641,28 +651,30 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     1,     0,     2,     0,     7,    10,
-       0,     8,     3,     7,     0,     9,     0,     0,     0,    19,
-       0,     5,     0,     0,     0,     0,     4,     6,     0,    23,
-      22,    28,    29,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,    15,    16,     0,     0,     0,
-      31,    24,    25,    26,    27,     0,    20,     0,     0,    17,
-       0,    11,     0,    17,    18,    21,    34,     0,    32,     0,
-       0,     0,    30,     0,    18,    12,    14,    33,     0,    13
+       0,     0,     0,     0,     1,     0,     2,     0,     0,     9,
+       0,     8,     3,     0,     0,     7,     0,     0,     0,    18,
+       0,     6,     0,     0,     0,     0,     4,     5,     0,    22,
+      21,    27,    28,     0,     0,     0,     0,     0,     0,     0,
+       0,    37,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,    11,    15,     0,     0,     0,
+      39,    35,    36,    29,    30,    31,    32,    33,    34,    23,
+      24,    25,    26,     0,    19,     0,     0,    16,     0,    10,
+       0,    16,    17,    20,    42,     0,    40,     0,     0,     0,
+      38,     0,    17,    12,    14,    41,     0,    13
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -22,   -22,   -22,   -22,   -21,    65,   -22,   -22,   -22,    18,
-       8,   -22,   -22,   -22,   -15,    13,   -22
+     -23,   -23,   -23,   -23,   -21,   110,   -23,   -23,   -23,    53,
+      32,   -23,   -23,   -23,   -22,    42,   -23
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     7,    14,    20,    10,    11,    21,    55,    64,
-      70,    25,    60,    71,    66,    67,    68
+       0,     2,     7,    14,    20,    10,    11,    21,    73,    82,
+      88,    25,    78,    89,    84,    85,    86
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -670,60 +682,84 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      27,    29,    30,    41,    42,    43,    44,     1,    35,    36,
-      16,    17,    18,    50,     4,    19,     3,    31,    32,    40,
-      43,    44,    47,     5,     6,    33,    51,    52,    53,    54,
-      34,     9,    13,    57,    59,    41,    42,    43,    44,    65,
-       8,    28,    45,    41,    42,    43,    44,    12,    74,    26,
-      46,    41,    42,    43,    44,    22,    49,    63,    56,    41,
-      42,    43,    44,    23,    24,    75,    61,    41,    42,    43,
-      44,    37,    73,    76,    79,    38,    39,    48,    15,    58,
-      62,    69,    78,    72,     0,     0,    77
+      27,    36,    37,    49,    50,    51,    52,    53,    54,    16,
+      17,    18,    41,    42,    19,     1,    57,    53,    54,    29,
+      30,    61,    62,    63,    64,    65,    66,    67,    68,    69,
+      70,    71,    72,     4,     3,     5,    75,    31,    32,    51,
+      52,    53,    54,     6,     8,    33,    34,     9,    13,    12,
+      35,    22,    77,    23,    24,    26,    28,    83,    38,    43,
+      44,    45,    46,    47,    48,    40,    92,    49,    50,    51,
+      52,    53,    54,    43,    44,    45,    46,    47,    48,    60,
+      39,    49,    50,    51,    52,    53,    54,    58,    59,    76,
+      55,    43,    44,    45,    46,    47,    48,    80,    81,    49,
+      50,    51,    52,    53,    54,    90,    93,    91,    56,    43,
+      44,    45,    46,    47,    48,    94,    97,    49,    50,    51,
+      52,    53,    54,    15,    96,     0,    74,    43,    44,    45,
+      46,    47,    48,    95,    87,    49,    50,    51,    52,    53,
+      54,     0,     0,     0,    79,    43,    44,    45,    46,    47,
+      48,     0,     0,    49,    50,    51,    52,    53,    54,    44,
+      45,    46,    47,    48,     0,     0,    49,    50,    51,    52,
+      53,    54,    45,    46,    47,    48,     0,     0,    49,    50,
+      51,    52,    53,    54
 };
 
 static const yytype_int8 yycheck[] =
 {
-      21,     3,     4,    23,    24,    25,    26,     5,    23,    24,
-       7,     8,     9,    33,     0,    12,    29,    19,    20,    34,
-      25,    26,    37,     4,    30,    27,    41,    42,    43,    44,
-      32,     4,    31,    48,    55,    23,    24,    25,    26,    60,
-      29,     4,    30,    23,    24,    25,    26,    30,    69,     6,
-      30,    23,    24,    25,    26,    29,     4,    11,    30,    23,
-      24,    25,    26,    29,    29,    10,    30,    23,    24,    25,
-      26,    29,    31,    13,    10,    30,    29,    29,    13,    30,
-      29,    63,    74,    30,    -1,    -1,    73
+      21,    23,    24,    23,    24,    25,    26,    27,    28,     7,
+       8,     9,    34,    35,    12,     5,    38,    27,    28,     3,
+       4,    43,    44,    45,    46,    47,    48,    49,    50,    51,
+      52,    53,    54,     0,    31,     4,    58,    21,    22,    25,
+      26,    27,    28,    32,    31,    29,    30,     4,    33,    32,
+      34,    31,    73,    31,    31,     6,     4,    78,    31,    15,
+      16,    17,    18,    19,    20,    31,    87,    23,    24,    25,
+      26,    27,    28,    15,    16,    17,    18,    19,    20,    35,
+      32,    23,    24,    25,    26,    27,    28,    31,     4,    32,
+      32,    15,    16,    17,    18,    19,    20,    31,    11,    23,
+      24,    25,    26,    27,    28,    32,    10,    33,    32,    15,
+      16,    17,    18,    19,    20,    13,    10,    23,    24,    25,
+      26,    27,    28,    13,    92,    -1,    32,    15,    16,    17,
+      18,    19,    20,    91,    81,    23,    24,    25,    26,    27,
+      28,    -1,    -1,    -1,    32,    15,    16,    17,    18,    19,
+      20,    -1,    -1,    23,    24,    25,    26,    27,    28,    16,
+      17,    18,    19,    20,    -1,    -1,    23,    24,    25,    26,
+      27,    28,    17,    18,    19,    20,    -1,    -1,    23,    24,
+      25,    26,    27,    28
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     5,    35,    29,     0,     4,    30,    36,    29,     4,
-      39,    40,    30,    31,    37,    39,     7,     8,     9,    12,
-      38,    41,    29,    29,    29,    45,     6,    38,     4,     3,
-       4,    19,    20,    27,    32,    48,    48,    29,    30,    29,
-      48,    23,    24,    25,    26,    30,    30,    48,    29,     4,
-      33,    48,    48,    48,    48,    42,    30,    48,    30,    38,
-      46,    30,    29,    11,    43,    38,    48,    49,    50,    43,
-      44,    47,    30,    31,    38,    10,    13,    49,    44,    10
+       0,     5,    37,    31,     0,     4,    32,    38,    31,     4,
+      41,    42,    32,    33,    39,    41,     7,     8,     9,    12,
+      40,    43,    31,    31,    31,    47,     6,    40,     4,     3,
+       4,    21,    22,    29,    30,    34,    50,    50,    31,    32,
+      31,    50,    50,    15,    16,    17,    18,    19,    20,    23,
+      24,    25,    26,    27,    28,    32,    32,    50,    31,     4,
+      35,    50,    50,    50,    50,    50,    50,    50,    50,    50,
+      50,    50,    50,    44,    32,    50,    32,    40,    48,    32,
+      31,    11,    45,    40,    50,    51,    52,    45,    46,    49,
+      32,    33,    40,    10,    13,    51,    46,    10
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    34,    36,    37,    35,    38,    38,    39,    39,    39,
-      40,    41,    41,    41,    41,    41,    42,    43,    44,    45,
-      46,    47,    48,    48,    48,    48,    48,    48,    48,    48,
-      48,    48,    49,    49,    50
+       0,    36,    38,    39,    37,    40,    40,    41,    41,    42,
+      43,    43,    43,    43,    43,    44,    45,    46,    47,    48,
+      49,    50,    50,    50,    50,    50,    50,    50,    50,    50,
+      50,    50,    50,    50,    50,    50,    50,    50,    50,    50,
+      51,    51,    52
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     0,     0,    11,     1,     2,     0,     1,     3,
-       1,     7,     9,    11,     9,     4,     0,     0,     0,     0,
-       0,     0,     1,     1,     3,     3,     3,     3,     1,     1,
-       7,     3,     1,     3,     1
+       0,     2,     0,     0,    11,     2,     1,     3,     1,     1,
+       7,     4,     9,    11,     9,     0,     0,     0,     0,     0,
+       0,     1,     1,     3,     3,     3,     3,     1,     1,     3,
+       3,     3,     3,     3,     3,     3,     3,     2,     7,     3,
+       1,     3,     1
 };
 
 
@@ -1187,117 +1223,121 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* $@1: %empty  */
-#line 68 "algosipro.y"
+#line 71 "algosipro.y"
                     {
-	printf("; Fichier asm obtenu depuis .tex\n"
-	   "\tconst ax,main\n"
-	   "\tjmp ax\n"
-	   );
-	}
-#line 1198 "algosipro.tab.c"
+  printf(
+    "; Fichier asm obtenu à partir d'un fichier latex \n\n"
+    "\tconst ax,main\n"
+    "\tjmp ax\n\n"
+    ":div_err_str\n"
+    "@string \"Erreur : Division par 0 impossible\\n\"\n\n"
+    ":div_err\n"
+    "\tconst ax,div_err_str\n"
+    "\tcallprintfs ax\n"
+    "\tend\n\n"
+    ":%s\n", (yyvsp[-1].var_name));
+}
+#line 1241 "algosipro.tab.c"
     break;
 
   case 3: /* $@2: %empty  */
-#line 73 "algosipro.y"
-                         {
-	t = new_table("RET");
-}
-#line 1206 "algosipro.tab.c"
+#line 83 "algosipro.y"
+                 {
+//ne change pas de position ce bloc de code 
+  ste = new_symbol("RET");
+  }
+#line 1250 "algosipro.tab.c"
     break;
 
-  case 10: /* param: VARNAME  */
-#line 90 "algosipro.y"
-        {
-	table *t = new_table((yyvsp[0].var_name));
-	t->class = PARAMETRE;
-	t->desc[0] = TYPE_INT;
-}
-#line 1216 "algosipro.tab.c"
+  case 9: /* param: VARNAME  */
+#line 100 "algosipro.y"
+          {
+    // Ajoute la variable dans la table des symboles et asipro
+    symbol_table_entry *ste = new_symbol((yyvsp[0].var_name));
+    ste->class = PARAMETRE;
+    ste->desc[0] = TYPE_INT;
+  }
+#line 1261 "algosipro.tab.c"
     break;
 
-  case 11: /* instr: SET '{' VARNAME '}' '{' expr '}'  */
-#line 99 "algosipro.y"
-                                 {
-  
-        // si le symbole n'est pas dans la table 
-	if (search((yyvsp[-4].var_name)) == NULL) {
-		// Ajoutons le symbole sur la pile 
-		printf("; Ajoute %s dans la pile\n", (yyvsp[-4].var_name));
-		reg_pop("ax");
-		printf("\tpush ax\n");
-		// Mettre à jour la table
-		table *t = new_table((yyvsp[-4].var_name));
-		t->class = LOCAL_VARIABLE;
-		t->desc[0] = TYPE_INT;
-	}
-}
-#line 1235 "algosipro.tab.c"
+  case 10: /* instr: SET '{' VARNAME '}' '{' expr '}'  */
+#line 109 "algosipro.y"
+                                   {
+    if (search((yyvsp[-4].var_name)) == NULL) {
+      printf("; Ajouter la variable %s dans la pile\n", (yyvsp[-4].var_name));
+      reg_pop("ax");
+      printf("\tpush ax\n");
+      symbol_table_entry *ste = new_symbol((yyvsp[-4].var_name));
+      ste->class = LOCAL_VARIABLE;
+      ste->desc[0] = TYPE_INT;
+    } else {
+      search((yyvsp[-4].var_name))->class = LOCAL_VARIABLE;
+      search((yyvsp[-4].var_name))->desc[0] = TYPE_INT;
+    }
+  }
+#line 1279 "algosipro.tab.c"
     break;
 
-  case 12: /* instr: IF '{' expr '}' if block_instr else fi FI  */
-#line 114 "algosipro.y"
-                                            {
-	if ((yyvsp[-6].s) != NUM) {
-		fprintf(stderr, "Erreur de type \n");
-		(yyval.s) = TYPE_ERR;
-		exit(EXIT_FAILURE);
-	}		
-}
-#line 1247 "algosipro.tab.c"
-    break;
-
-  case 13: /* instr: IF '{' expr '}' if block_instr ELSE else block_instr fi FI  */
-#line 122 "algosipro.y"
-                                                             {
-	if ((yyvsp[-8].s) != NUM) {
-		fprintf(stderr, "Erreur de type\n");
-		(yyval.s) = TYPE_ERR;
-		
-		exit(EXIT_FAILURE);
-	}		
-}
-#line 1260 "algosipro.tab.c"
-    break;
-
-  case 14: /* instr: DOWHILE begin_while '{' expr '}' while block_instr fwhile OD  */
-#line 131 "algosipro.y"
-                                                               {
-	if ((yyvsp[-5].s) != NUM) {
-		fprintf(stderr, "Erreur de type\n");
-		(yyval.s) = TYPE_ERR;	
-		exit(EXIT_FAILURE);
-	}
-}
-#line 1272 "algosipro.tab.c"
-    break;
-
-  case 15: /* instr: RETURN '{' expr '}'  */
-#line 139 "algosipro.y"
-                      {
+  case 11: /* instr: RETURN '{' expr '}'  */
+#line 123 "algosipro.y"
+                        {
     
     // Stockez la valeur dans ax et libérez la pile
     reg_pop("ax");
-    table *st = table_head(); 
+    symbol_table_entry *st = symbol_table_get_head(); 
     while (st != NULL) {
-      if (strcmp(st->name, "RET") == 0) {
-        break;
-      }
-
+      if (strcmp(st->name, "RET") == 0) break;
       printf("\tpop dx\n");
       st = st->next;
     }
     printf("\tret\n");
   }
-#line 1292 "algosipro.tab.c"
+#line 1296 "algosipro.tab.c"
     break;
 
-  case 16: /* if: %empty  */
-#line 156 "algosipro.y"
+  case 12: /* instr: IF '{' expr '}' if block_instr else fi FI  */
+#line 137 "algosipro.y"
+                                              {
+    if ((yyvsp[-6].s) != NUM) {
+      fprintf(stderr, "Erreur de type \n");
+	(yyval.s) = TYPE_ERR;
+	  exit(EXIT_FAILURE);
+    }		
+  }
+#line 1308 "algosipro.tab.c"
+    break;
+
+  case 13: /* instr: IF '{' expr '}' if block_instr ELSE else block_instr fi FI  */
+#line 146 "algosipro.y"
+                                                               {
+	if ((yyvsp[-8].s) != NUM) {
+		fprintf(stderr, "Erreur de type\n");
+		(yyval.s) = TYPE_ERR;
+		exit(EXIT_FAILURE);
+	}	
+}
+#line 1320 "algosipro.tab.c"
+    break;
+
+  case 14: /* instr: DOWHILE begin_while '{' expr '}' while block_instr elihw OD  */
+#line 154 "algosipro.y"
+                                                                {
+	if ((yyvsp[-5].s) != NUM) {
+		fprintf(stderr, "Erreur de type\n");
+		(yyval.s) = TYPE_ERR;	
+		exit(EXIT_FAILURE);
+	}
+  }
+#line 1332 "algosipro.tab.c"
+    break;
+
+  case 15: /* if: %empty  */
+#line 163 "algosipro.y"
      {
 	int n = numero_label();
 	push(n);
-	char* buf = malloc(MAXBUF);
-	create_label(buf, MAXBUF, "else_%u", n);
+	char buf[MAXBUF];
+	creer_label(buf, MAXBUF, "else_%u", n);
 
 	reg_pop("ax");
 	printf(
@@ -1306,249 +1346,643 @@ yyreduce:
 	"\tcmp ax,bx\n"
 	"\tjmpc cx\n"
 	"\n",buf);
-	free(buf);
 }
-#line 1312 "algosipro.tab.c"
+#line 1351 "algosipro.tab.c"
     break;
 
-  case 17: /* else: %empty  */
-#line 173 "algosipro.y"
+  case 16: /* else: %empty  */
+#line 178 "algosipro.y"
        {
-	char* buf = malloc(MAXBUF);
 	int n = top();
-	create_label(buf, MAXBUF, "else_%u", n);
-  	printf("\tconst ax,fin_if_%u\n"
-	       "\tjmp ax\n"
-	       ":%s\n"
-	       "\n", n, buf
-	);    
-	free(buf);
+	char buf[MAXBUF];
+	creer_label(buf, MAXBUF, "else_%u", n);
+	printf(
+	"\tconst ax,fin_if_%u\n"
+	"\tjmp ax\n"
+	":%s\n"
+	"\n", n, buf);
 }
-#line 1328 "algosipro.tab.c"
+#line 1366 "algosipro.tab.c"
     break;
 
-  case 18: /* fi: %empty  */
-#line 186 "algosipro.y"
+  case 17: /* fi: %empty  */
+#line 189 "algosipro.y"
      {
 	int n = top();
-	char* buf = malloc(MAXBUF);
-	create_label(buf, MAXBUF, "fin_if_%u", n);
+	char buf[MAXBUF];
+	creer_label(buf, MAXBUF, "fin_if_%u", n);
 	printf(":%s\n", buf);
-	free(buf);
 }
-#line 1340 "algosipro.tab.c"
+#line 1377 "algosipro.tab.c"
     break;
 
-  case 19: /* begin_while: %empty  */
-#line 195 "algosipro.y"
+  case 18: /* begin_while: %empty  */
+#line 196 "algosipro.y"
               {
 	int n = numero_label();
 	push(n);
-	char* buf = malloc(MAXBUF);
-	create_label(buf, MAXBUF, "while_%u", n);
-  	printf("; La boucle do while\n"
-	       ":%s\n",buf
-	);
-  	free(buf);
+	char buf[MAXBUF];
+	creer_label(buf, MAXBUF, "while_%u", n);
+	printf(
+	"; Début de la boucle do while\n"
+	":%s\n",buf);
+  
 }
-#line 1355 "algosipro.tab.c"
+#line 1392 "algosipro.tab.c"
     break;
 
-  case 20: /* while: %empty  */
-#line 206 "algosipro.y"
+  case 19: /* while: %empty  */
+#line 207 "algosipro.y"
         {
-	int x = top();
-	char* buf = malloc(MAXBUF);
-	create_label(buf, MAXBUF, "fin_while_%u", x);
-  	reg_pop("ax");
-	printf( "\tconst bx,0\n"
-        	"\tconst cx,%s\n"
-	        "\tcmp ax,bx\n"
-	        "\tjmpc cx\n", buf
-	);
-	free(buf);
-}
-#line 1372 "algosipro.tab.c"
-    break;
-
-  case 21: /* fwhile: %empty  */
-#line 220 "algosipro.y"
-         {
 	int n = top();
-	char* buf = malloc(MAXBUF);
-	create_label(buf, MAXBUF, "fin boucle while%u", n);
-  	printf("\tconst ax,while_%u\n"
-	       "\tjmp ax\n"
-	       ":%s\n", n, buf
+	char buf[MAXBUF];
+	creer_label(buf, MAXBUF, "fin_while_%u", n);
+	reg_pop("ax");
+	printf(
+	"\tconst bx,0\n"
+	"\tconst cx,%s\n"
+	"\tcmp ax,bx\n"
+	"\tjmpc cx\n", buf
 	);
-	free(buf);
 }
-#line 1387 "algosipro.tab.c"
+#line 1409 "algosipro.tab.c"
     break;
 
-  case 22: /* expr: VARNAME  */
-#line 233 "algosipro.y"
+  case 20: /* elihw: %empty  */
+#line 220 "algosipro.y"
         {
-	table *var = search((yyvsp[0].var_name));
+	int n = top();
+	char buf[MAXBUF];
+	creer_label(buf, MAXBUF, "fin_while_%u", n);
+	printf(
+	"\tconst ax,while_%u\n"
+	"\tjmp ax\n"
+	":%s\n", n, buf
+	);
+}
+#line 1424 "algosipro.tab.c"
+    break;
+
+  case 21: /* expr: VARNAME  */
+#line 235 "algosipro.y"
+          {
+	symbol_table_entry *var = search((yyvsp[0].var_name));
 	if (var == NULL) {
-		fprintf(stderr, "ERROR: La variable %s n'existe pas\n", (yyvsp[0].var_name));
+		fprintf(stderr, "ERREUR: La variable %s n'existe pas\n", (yyvsp[0].var_name));
 		(yyval.s) = VARIABLE_INDEFINI;
-		
 	} else {
-		get_asm_var((yyvsp[0].var_name));
+		get_var((yyvsp[0].var_name));
 		(yyval.s) = NUM;
 	}
-}
-#line 1403 "algosipro.tab.c"
+  }
+#line 1439 "algosipro.tab.c"
     break;
 
-  case 23: /* expr: NUMBER  */
-#line 245 "algosipro.y"
+  case 22: /* expr: NUMBER  */
+#line 248 "algosipro.y"
          {
-	printf( "; Number %d\n"
-		"\tconst ax,%d\n", (yyvsp[0].integer), (yyvsp[0].integer)
-	);
-	reg_push("ax");
+	printf(
+	"; Nombre %d\n"
+	"\tconst ax,%d\n", (yyvsp[0].integer), (yyvsp[0].integer));
+	push_reg("ax");
 	(yyval.s) = NUM;
 }
-#line 1415 "algosipro.tab.c"
+#line 1451 "algosipro.tab.c"
     break;
 
-  case 24: /* expr: expr '+' expr  */
-#line 253 "algosipro.y"
+  case 23: /* expr: expr '+' expr  */
+#line 257 "algosipro.y"
                 {
 	if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
-		fprintf(stderr, "Erreur de type \n");
-		(yyval.s) = TYPE_ERR;
-		
+	fprintf(stderr, "Erreur de type \n");
+	(yyval.s) = TYPE_ERR;
 	} else {
 		printf("; Additioner deux expressions\n");
 		reg_pop("ax");
 		reg_pop("bx");
 		printf("\tadd ax,bx\n");
-		reg_push("ax");
+		push_reg("ax");
 		(yyval.s) = NUM;
 	}
-}
-#line 1434 "algosipro.tab.c"
+  }
+#line 1469 "algosipro.tab.c"
     break;
 
-  case 25: /* expr: expr '-' expr  */
-#line 268 "algosipro.y"
+  case 24: /* expr: expr '-' expr  */
+#line 272 "algosipro.y"
                 {
     if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
-		fprintf(stderr, "Erreur de type \n");
-		(yyval.s) = TYPE_ERR;
-
-	} else {
-		printf("; Soustraire deux expressions\n");
-		reg_pop("ax");
-		reg_pop("bx");
-		printf("\tsub bx,ax\n");
-		reg_push("bx");
-		(yyval.s) = NUM;
+	fprintf(stderr, "Erreur de type \n");
+	(yyval.s) = TYPE_ERR;		
+    } else {
+	      printf("; Soustraire deux expressions\n");
+	      reg_pop("ax");
+	      reg_pop("bx");
+	      printf("\tsub bx,ax\n");
+	      push_reg("bx");
+	      (yyval.s) = NUM;
 	}
   }
-#line 1453 "algosipro.tab.c"
+#line 1487 "algosipro.tab.c"
     break;
 
-  case 26: /* expr: expr '*' expr  */
-#line 283 "algosipro.y"
-                  {
-	if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
-		fprintf(stderr, "Erreur de type \n");
-		(yyval.s) = TYPE_ERR;
-	} else {
-		printf("; Multiplier deux expressions\n");
-		reg_pop("ax");
-		reg_pop("bx");
-		printf("\tmul ax,bx\n");
-		reg_push("ax");
-		(yyval.s) = NUM;
-	}
-  }
-#line 1471 "algosipro.tab.c"
-    break;
-
-  case 27: /* expr: expr '/' expr  */
-#line 297 "algosipro.y"
-                  {
+  case 25: /* expr: expr '*' expr  */
+#line 288 "algosipro.y"
+                {
 	if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
 		fprintf(stderr, "Erreur de type \n");
 		(yyval.s) = TYPE_ERR;
 		
 	} else {
-		printf( "; Diviser deux expressions\n"
-			"\tconst cx,div_err\n"
-		);
+		printf("; Multiplier deux expressions\n");
 		reg_pop("ax");
 		reg_pop("bx");
-		printf( "\tdiv bx,ax\n"
-			"\tjmpe cx\n"
-		);
-		reg_push("bx");
+		printf("\tmul ax,bx\n");
+		push_reg("ax");
 		(yyval.s) = NUM;
 	}
 }
-#line 1494 "algosipro.tab.c"
+#line 1506 "algosipro.tab.c"
     break;
 
-  case 28: /* expr: VRAI  */
-#line 316 "algosipro.y"
-       {       
-	printf("\tconst ax,1\n"); 
-        printf("\tpush ax\n");
-        (yyval.s)=TYPE_BOOL;
-       }
-#line 1504 "algosipro.tab.c"
+  case 26: /* expr: expr '/' expr  */
+#line 304 "algosipro.y"
+                {
+	if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
+		fprintf(stderr, "Erreur de type \n");
+		(yyval.s) = TYPE_ERR;
+		
+	} else {
+		printf(
+		"; Diviser deux expressions\n"
+		"\tconst cx,div_err\n");
+		reg_pop("ax");
+		reg_pop("bx");
+		printf( 
+		"\tdiv bx,ax\n"
+		"\tjmpe cx\n");
+		push_reg("bx");
+		(yyval.s) = NUM;
+	}
+}
+#line 1529 "algosipro.tab.c"
     break;
 
-  case 29: /* expr: FAUX  */
-#line 322 "algosipro.y"
-       {  
-	printf("\tconst ax,0\n");
-        printf("\tpush ax\n");
-        (yyval.s)=TYPE_BOOL;
-    }
-#line 1514 "algosipro.tab.c"
+  case 27: /* expr: VRAI  */
+#line 325 "algosipro.y"
+        {	
+		printf("\tconst ax,1\n"); 
+		printf("\tpush ax\n");
+                (yyval.s)=TYPE_BOOL;
+	}
+#line 1539 "algosipro.tab.c"
     break;
 
-  case 30: /* expr: CALL '{' VARNAME '}' '{' lexpr '}'  */
-#line 329 "algosipro.y"
+  case 28: /* expr: FAUX  */
+#line 332 "algosipro.y"
+        {  
+		printf("\tconst ax,0\n");
+                printf("\tpush ax\n");
+                (yyval.s)=TYPE_BOOL;
+	}
+#line 1549 "algosipro.tab.c"
+    break;
+
+  case 29: /* expr: expr INF expr  */
+#line 340 "algosipro.y"
+                {
+  if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
+    fprintf(stderr, "Erreur de type\n");
+    exit(EXIT_FAILURE);
+  } else {
+    // Creation de label
+    int n = numero_label();
+    char buf[MAXBUF];
+    creer_label(buf, MAXBUF, "inf_%u", n);
+    char buf2[MAXBUF];
+    creer_label(buf2, MAXBUF, "fin_inf_%u", n);
+
+    printf("; Debut comparaison de l'operateur inf_%u \n", n);
+    reg_pop("ax");
+    reg_pop("bx");
+    printf(
+      "\tconst cx,%s\n"
+      "\tsless bx,ax\n"
+      "\tjmpc cx\n"
+      "; Cas faux(ID: %u)\n"
+      "\tconst ax,0\n"
+      "\tpush ax\n"
+      "\tconst ax,%s\n"
+      "\tjmp ax\n"
+      "; Cas vrai (ID: %u)\n"
+      ":%s\n"
+      "\tconst ax,1\n"
+      "\tpush ax\n"
+      "; Fin de comparaison de l'operateur inf_%u \n"
+      ":%s\n", buf, n, buf2, n, buf, n, buf2);
+
+    // Ajouter une variable temporaire à la table des symboles
+    symbol_table_entry *ste = new_symbol("TMP");
+    ste->class = LOCAL_VARIABLE;
+    ste->desc[0] = TYPE_INT;
+    (yyval.s) = NUM;
+  }
+}
+#line 1592 "algosipro.tab.c"
+    break;
+
+  case 30: /* expr: expr INFEG expr  */
+#line 381 "algosipro.y"
+                  {
+    if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
+	fprintf(stderr, " Erreur de type\n");
+	(yyval.s) = TYPE_ERR;
+    } else {
+	int n = numero_label();
+	char buf[MAXBUF];
+	creer_label(buf, MAXBUF, "infeg_%u", n);
+	char buf2[MAXBUF];
+	creer_label(buf2, MAXBUF, "fin_infeg_%u", n);
+      
+	printf("; Debut comparaison de l'operateur infeg_%u \n", n);
+	reg_pop("ax");
+	reg_pop("bx");
+	printf(
+	"\tcp cx,bx\n"
+	"\tconst dx,%s\n"
+	"\tsless bx,ax\n"
+	"\tjmpc dx\n"
+	"\tcmp cx,ax\n"
+	"\tjmpc dx\n"
+	"; Cas Faux (ID: %u)\n"
+	"\tconst ax,0\n"
+	"\tpush ax\n"
+	"\tconst ax,%s\n"
+	"\tjmp ax\n"
+	"; Cas Vrai (ID: %u)\n"
+	":%s\n"
+	"\tconst ax,1\n"
+	"\tpush ax\n"
+	"; Fin comparaison de l'operateur infeg_%u \n"
+	":%s\n", buf, n, buf2, n, buf, n, buf2
+	);
+
+	symbol_table_entry *ste = new_symbol("TMP");
+	ste->class = LOCAL_VARIABLE;
+	ste->desc[0] = TYPE_INT;
+	(yyval.s) = NUM;
+	}
+}
+#line 1637 "algosipro.tab.c"
+    break;
+
+  case 31: /* expr: expr SUP expr  */
+#line 424 "algosipro.y"
+                {
+	if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
+		fprintf(stderr, "Erreur de type\n");
+		(yyval.s) = TYPE_ERR;
+
+		} else {
+		int n = numero_label();
+		char buf[MAXBUF];
+		creer_label(buf, MAXBUF, "sup_%u", n);
+		char buf2[MAXBUF];
+		creer_label(buf2, MAXBUF, "fin_sup_%u", n);
+
+		printf("; Debut comparaison de l'operateur sup_%u \n", n);
+		reg_pop("ax");
+		reg_pop("bx");
+		printf(
+		"\tcp cx,bx\n"
+		"\tconst dx,%s\n"
+		"\tsless bx,ax\n"
+		"\tjmpc dx\n"
+		"\tcmp cx,ax\n"
+		"\tjmpc dx\n"
+		"; Cas Faux (ID: %u)\n"
+		"\tconst ax,1\n"
+		"\tpush ax\n"
+		"\tconst ax,%s\n"
+		"\tjmp ax\n"
+		"; Cas Vrai (ID: %u)\n"
+		":%s\n"
+		"\tconst ax,0\n"
+		"\tpush ax\n"
+		"; Fin comparaison de l'operateur sup_%u \n"
+		":%s\n", buf, n, buf2, n, buf, n, buf2
+		);
+
+
+		symbol_table_entry *ste = new_symbol("TMP");
+		ste->class = LOCAL_VARIABLE;
+		ste->desc[0] = TYPE_INT;
+		(yyval.s) = NUM;
+	}
+}
+#line 1684 "algosipro.tab.c"
+    break;
+
+  case 32: /* expr: expr SUPEG expr  */
+#line 468 "algosipro.y"
+                  {
+if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
+	fprintf(stderr, "Erreur de type\n");
+	(yyval.s) = TYPE_ERR;
+
+	} else {
+		int n = numero_label();
+		char buf[MAXBUF];
+		creer_label(buf, MAXBUF, "supeg_%u", n);
+		char buf2[MAXBUF];
+		creer_label(buf2, MAXBUF, "fin_supeg_%u", n);
+
+		printf("; Debut comparaison de l'operateur supeg_%u \n", n);
+		reg_pop("ax");
+		reg_pop("bx");
+		printf(
+		"\tconst cx,%s\n"
+		"\tsless bx,ax\n"
+		"\tjmpc cx\n"
+		"; Cas faux (ID: %u)\n"
+		"\tconst ax,1\n"
+		"\tpush ax\n"
+		"\tconst ax,%s\n"
+		"\tjmp ax\n"
+		"; Cas vrai (ID: %u)\n"
+		":%s\n"
+		"\tconst ax,0\n"
+		"\tpush ax\n"
+		"; Fin comparaison de l'operateur supeg_%u \n"
+		":%s\n", buf, n, buf2, n, buf, n, buf2);
+
+		symbol_table_entry *ste = new_symbol("TMP");
+		ste->class = LOCAL_VARIABLE;
+		ste->desc[0] = TYPE_INT;
+		(yyval.s) = NUM;
+	}
+}
+#line 1726 "algosipro.tab.c"
+    break;
+
+  case 33: /* expr: expr EG expr  */
+#line 508 "algosipro.y"
+               {
+	if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
+	fprintf(stderr, "Erreur de type \n");
+		(yyval.s) = TYPE_ERR;
+		
+	} else {
+		int n = numero_label();
+		char buf1[MAXBUF];
+		creer_label(buf1, MAXBUF, "egal_%u", n);
+		char buf2[MAXBUF];
+		creer_label(buf2, MAXBUF, "fin_egal_%u", n);
+
+		printf("; Debut comparaison egal_%u \n", n);
+		reg_pop("ax");
+		reg_pop("bx");
+		printf(
+			"\tconst cx,%s\n"
+			"\tcmp ax,bx\n"
+			"\tjmpc cx\n"
+			"; Cas faux (ID: %u)\n"
+			"\tconst ax,0\n"
+			"\tpush ax\n"
+			"\tconst ax,%s\n"
+			"\tjmp ax\n"
+			"; Cas vrai(ID: %u)\n"
+			":%s\n"
+			"\tconst ax,1\n"
+			"\tpush ax\n"
+			"; Fin comparaison (egal_%u) \n"
+			":%s\n", buf1, n, buf2, n, buf1, n, buf2
+			); 
+		// Ajouter une variable temporaire à la table des symboles
+		symbol_table_entry *ste = new_symbol("TMP");
+		ste->class = LOCAL_VARIABLE;
+		ste->desc[0] = TYPE_INT;
+		(yyval.s) = NUM;
+	}
+}
+#line 1769 "algosipro.tab.c"
+    break;
+
+  case 34: /* expr: expr NEG expr  */
+#line 548 "algosipro.y"
+                {
+	if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
+	fprintf(stderr, " Erreur de type\n");
+		(yyval.s) = TYPE_ERR;
+	} else {
+	int n = numero_label();
+	char buf1[MAXBUF];
+	creer_label(buf1, MAXBUF, "non_egal_%u", n);
+	char buf2[MAXBUF];
+	creer_label(buf2, MAXBUF, "fin_non_egal_%u", n);
+
+	printf("; Debut comparaison (non_egal_%u)\n", n);
+	reg_pop("ax");
+	reg_pop("bx");
+	printf(
+		"\tconst cx,%s\n"
+		"\tcmp ax,bx\n"
+		"\tjmpc cx\n"
+		"; Cas vrai (ID: %u)\n"
+		"\tconst ax,1\n"
+		"\tpush ax\n"
+		"\tconst ax,%s\n"
+		"\tjmp ax\n"
+		"; Cas faux (ID : %u)\n"
+		":%s\n"
+		"\tconst ax,0\n"
+		"\tpush ax\n"
+		"; Fin comparaison  (non_egal_%u)\n"
+		":%s\n", buf1, n, buf2, n, buf1, n, buf2
+    );
+    
+    // Ajouter une variable temporaire à la table des symboles
+    symbol_table_entry *ste = new_symbol("TMP");
+    ste->class = LOCAL_VARIABLE;
+    ste->desc[0] = TYPE_INT;
+    (yyval.s) = NUM;
+  }
+}
+#line 1812 "algosipro.tab.c"
+    break;
+
+  case 35: /* expr: expr OU expr  */
+#line 588 "algosipro.y"
+               {
+	if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
+	fprintf(stderr, "Erreur de type\n");
+	(yyval.s) = TYPE_ERR;
+
+	} else {
+		int n = numero_label();
+		char buf1[MAXBUF];
+		creer_label(buf1, MAXBUF, "ou_%u", n);
+		char buf2[MAXBUF];
+		creer_label(buf2, MAXBUF, "fin_ou_%u", n);
+
+		printf("; Debut comparaison avec l'operateur OU_%u \n", n);
+		reg_pop("ax");
+		reg_pop("bx");
+		printf(
+		"\tor ax,bx\n"
+		"\tconst bx,0\n"
+		"\tconst cx,%s\n"
+		"\tcmp ax,bx\n"
+		"\tjmpc cx\n"
+		"; Faux cas (ID: %u)\n"
+		"\tconst ax,1\n"
+		"\tpush ax\n"
+		"\tconst ax,%s\n"
+		"\tjmp ax\n"
+		"; Cas Vrai (ID: %u)\n"
+		":%s\n"
+		"\tconst ax,0\n"
+		"\tpush ax\n"
+		"; Fin comparaison de l' operateur OU_%u\n"
+		":%s\n", buf1, n, buf2, n, buf1, n, buf2
+	);
+
+	// Ajouter une variable temporaire à la table des symboles
+	symbol_table_entry *ste = new_symbol("TMP");
+	ste->class = LOCAL_VARIABLE;
+	ste->desc[0] = TYPE_INT;
+	(yyval.s) = NUM;
+	}
+}
+#line 1858 "algosipro.tab.c"
+    break;
+
+  case 36: /* expr: expr ET expr  */
+#line 631 "algosipro.y"
+               {
+	if ((yyvsp[-2].s) != NUM || (yyvsp[0].s) != NUM) {
+	fprintf(stderr, "Erreur de type\n");
+	(yyval.s) = TYPE_ERR;
+	} else {
+		int n = numero_label();
+		char buf1[MAXBUF];
+		creer_label(buf1, MAXBUF, "et_%u", n);
+		char buf2[MAXBUF];
+		creer_label(buf2, MAXBUF, "fin_et_%u", n);
+
+
+		printf("; Debut comparaison avec l'operateur ET_%u \n", n);
+		reg_pop("ax");
+		reg_pop("bx");
+		printf(
+			"\tmul ax,bx\n"
+			"\tconst bx,0\n"
+			"\tconst cx,%s\n"
+			"\tcmp ax,bx\n"
+			"\tjmpc cx\n"
+			"; Cas Faux (ID: %u)\n"
+			"\tconst ax,1\n"
+			"\tpush ax\n"
+			"\tconst ax,%s\n"
+			"\tjmp ax\n"
+			"; Cas Vrai (ID: %u)\n"
+			":%s\n"
+			"\tconst ax,0\n"
+			"\tpush ax\n"
+			"; Fin de comparaison de l'operateur ET_%u \n"
+			":%s\n", buf1, n, buf2, n, buf1, n, buf2
+		);
+
+     		// Ajouter une variable temporaire à la table des symboles
+		symbol_table_entry *ste = new_symbol("TMP");
+		ste->class = LOCAL_VARIABLE;
+		ste->desc[0] = TYPE_INT;
+		(yyval.s) = NUM;
+	}
+}
+#line 1904 "algosipro.tab.c"
+    break;
+
+  case 37: /* expr: NON expr  */
+#line 674 "algosipro.y"
+           {
+	if ((yyvsp[0].s) != NUM) {
+		fprintf(stderr, "Erreur de type\n");
+		(yyval.s) = TYPE_ERR;
+	} else {
+		int n = numero_label();
+		char buf1[MAXBUF];
+		creer_label(buf1, MAXBUF, "non_%u", n);
+		char buf2[MAXBUF];
+		creer_label(buf2, MAXBUF, "fin_non_%u", n);
+
+
+		printf("; Debut operateur non_%u\n", n);
+		reg_pop("ax");
+		printf(
+		"\tconst cx,%s\n"
+		"\tconst bx,0\n"
+		"\tcmp ax,bx\n"
+		"\tjmpc cx\n"
+		"; Cas  vrai (ID: %u)\n"
+		"\tconst ax,1\n"
+		"\tpush ax\n"
+		"\tconst ax,%s\n"
+		"\tjmp ax\n"
+		"; Cas faux (ID: %u)\n"
+		":%s\n"
+		"\tconst ax,0\n"
+		"\tpush ax\n"
+		"; Fin operateur non_%u\n"
+		":%s\n", buf1, n, buf2, n, buf1, n, buf2
+		);
+
+		symbol_table_entry *ste = new_symbol("TMP");
+		ste->class = LOCAL_VARIABLE;
+		ste->desc[0] = TYPE_INT;
+		(yyval.s) = NUM;
+	}
+}
+#line 1947 "algosipro.tab.c"
+    break;
+
+  case 38: /* expr: CALL '{' VARNAME '}' '{' lexpr '}'  */
+#line 714 "algosipro.y"
                                      {
-	printf( "; Appel de la fonction  %s\n"
+	printf(
+		"; Appel de la fonction  %s\n"
 		"\tconst bx,%s\n"
 		"\tcall bx\n", (yyvsp[-4].var_name), (yyvsp[-4].var_name));
 
+	// Libérez les variables temporaires (paramètres) dans la table des symboles et ajoutez le pop
 	printf("; Pop les arguments de la fonction appelée\n");
-	for (size_t i = 0; i < argument; ++i) {
-		reg_pop("dx");
-	}
-	reg_push("ax");
+	for (size_t i = 0; i < argument; ++i) { reg_pop("dx"); }
+	// Pousser la valeur retournée sur la pile
+	push_reg("ax");
 
 	(yyval.s) = NUM;
 }
-#line 1532 "algosipro.tab.c"
+#line 1966 "algosipro.tab.c"
     break;
 
-  case 31: /* expr: '(' expr ')'  */
-#line 343 "algosipro.y"
+  case 39: /* expr: '(' expr ')'  */
+#line 729 "algosipro.y"
                {
-	(yyval.s) = (yyvsp[-1].s);
+  (yyval.s) = (yyvsp[-1].s);
 }
-#line 1540 "algosipro.tab.c"
+#line 1974 "algosipro.tab.c"
     break;
 
-  case 34: /* tmp_expr: expr  */
-#line 354 "algosipro.y"
-             {
-		++argument;
-	}
-#line 1548 "algosipro.tab.c"
+  case 42: /* tmp_expr: expr  */
+#line 740 "algosipro.y"
+       {
+    ++argument;
+  }
+#line 1982 "algosipro.tab.c"
     break;
 
 
-#line 1552 "algosipro.tab.c"
+#line 1986 "algosipro.tab.c"
 
       default: break;
     }
@@ -1741,57 +2175,132 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 358 "algosipro.y"
+#line 744 "algosipro.y"
 
 
 void yyerror(char const *s) {
-	fprintf(stderr, "%s\n", s);
+  fprintf(stderr, "%s\n", s);
+}
+void string_2_int(int *r, const char *s) {
+  char *p;
+  long v;
+  errno = 0;
+  v = strtol(s, &p, 10);
+  if ((*p != '\0' || 
+      (errno == ERANGE && (v == LONG_MIN || v == LONG_MAX))) || 
+      (v < INT_MIN || v > INT_MAX)) {
+    fprintf(stderr, "Erreur de conversion de string en int\n");
+    exit(EXIT_FAILURE);
+  } 
+  *r = (int) v;
 }
 
-int main() {
-	yyparse();
-	return EXIT_SUCCESS;
+void addMain(int argc, char **argv) {
+
+  if (argc !=3) {
+    fprintf(stderr, 
+        "Erreur : Veuillez respectez cette synthaxe: ./algosipro < .tex > .asm nom_fonction parametres");
+    exit(EXIT_FAILURE);
+  }
+
+  // Écrire le début de la fonction main
+  printf(
+    "\n:main\n"
+    "; initialistaion de la pile\n"
+    "\tconst bp,stack\n"
+    "\tconst sp,stack\n"
+    "\tconst ax,2\n"
+    "\tsub sp,ax\n"
+  );
+  
+  // Extraire les parametres
+
+  char parametres[100];
+  strcpy(parametres,argv[2]);
+  
+  //Divisez les paramètres par un virgule et les convertir en int
+  char *parametre = strtok(parametres, ",");
+  printf("; construction des parametres\n");
+  while (parametre != NULL) {
+    int parametre_int = 0;
+    string_2_int(&parametre_int, parametre);
+    printf( 
+      "\tconst ax,%d\n"
+      "\tpush ax\n", parametre_int);
+    parametre = strtok(NULL, ",");
+  }
+
+  //Appel de la fonction et affichage du resultat 
+  printf(
+    "; Appel de la founction %s\n"
+    "\tconst ax,%s\n"
+    "\tcall ax\n"
+    ";recuperer le resultat et affiche le\n"
+    "\tpush ax\n"
+    "\tcp ax,sp\n"
+    "\tcallprintfd ax\n"
+    "\tend\n"
+    ":stack\n"
+    "@int 0\n", argv[1], argv[1]);
+  
 }
 
-void get_asm_var(const char *name) {
-	table *st = table_head();
+int main(int argc, char* argv[]) {
+  yyparse();
+  addMain(argc, argv);
+  return EXIT_SUCCESS;
+}
+
+/*
+ index est nécessaire pour calculer l'adresse de la variable dans la pile
+*/
+void get_var(const char *name) {
+	//recupere l'adresse de la premiere entré de la table de symbole
+	symbol_table_entry *st = symbol_table_get_head();
+	//trouver l'entrée correspondant au nom de la variable passée en paramètre 
 	size_t index = 0;
 	while (st != NULL) {
-		if (strcmp(st->name, name) == 0) break;
-
-		++index;
+		if (strcmp(st->name, name) == 0) {
+	break;
+    }
+    ++index;
 		st = st->next;
 	}
 
-	printf(
-	"; Récupérez la variable %s et placez-la en haut de la pile\n"
-	"\tconst ax,2\n"
-	"\tconst bx,%zu\n"
-	"\tmul ax,bx\n"
-	"\tcp bx,sp\n"
-	"\tsub bx,ax\n"
-	"\tloadw ax,bx\n"
-	"\tpush ax\n",
-	name, index
+  //génèration du code assembleur nécessaire pour récupérer la valeur de la variable et la pousser en haut dans la pile.
+  printf(
+    "; Récupérez la variable %s et placez-la en haut de la pile\n"
+    "\tconst ax,2\n"
+    "\tconst bx,%zu\n"
+    "\tmul ax,bx\n"
+    "\tcp bx,sp\n"
+    "\tsub bx,ax\n"
+    "\tloadw ax,bx\n"
+    "\tpush ax\n",
+    name, index
   );
-  table *t = new_table("TMP");
-  t->class = LOCAL_VARIABLE;
-  t->desc[0] = TYPE_INT;
+
+  
+  //Ajouter la variable poussée à la table des symboles
+  symbol_table_entry *ste = new_symbol("TMP");
+  ste->class = LOCAL_VARIABLE;
+  ste->desc[0] = TYPE_INT;
 }
 
 
-void reg_push(const char *registry) {
-	table *t = new_table("TMP");
-	t->class = LOCAL_VARIABLE;
-	t->desc[0] = TYPE_INT;
-	printf( "; Pousser une variable temporaire sur la pile\n"
-		"\tpush %s\n", registry
-	);
+void push_reg(const char *registry) {
+  symbol_table_entry *ste = new_symbol("TMP");
+  ste->class = LOCAL_VARIABLE;
+  ste->desc[0] = TYPE_INT;
+  printf(
+    "; Pousser une variable temporaire sur la pile\n"
+    "\tpush %s\n", registry);
 }
 
 void reg_pop(const char *registry) {
-  	free_first_table();
-	printf("\tpop %s\n", registry);
+  free_first_symbol();
+  printf(
+    "\tpop %s\n", registry);
 }
 
 int numero_label() {
@@ -1801,25 +2310,25 @@ int numero_label() {
 	return num_label++;
 }
 
-void create_label(char *buf, size_t buf_size, const char *format, ...) {
+void creer_label(char *buf, size_t buf_size, const char *format, ...) {
 	va_list ap;
 	va_start(ap, format);
-	if (vsnprintf(buf, buf_size, format, ap) >= buf_size ) {
+	if ( vsnprintf(buf, buf_size, format, ap) >= buf_size ) {
 		va_end(ap);
 		fprintf(stderr,"Erreur lors de la generation du label");
 	}
 	va_end(ap);
 }
 
+
 void push(int e) {
 	stack[stack_index++] = e;
-}
-
-int top() {
-	return stack[stack_index - 1];
 }
 
 int pop() {
 	return stack[--stack_index];
 }
 
+int top() {
+	return stack[stack_index - 1];
+}

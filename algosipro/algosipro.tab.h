@@ -70,12 +70,14 @@ extern int yydebug;
     ET = 271,                      /* ET  */
     INF = 272,                     /* INF  */
     INFEG = 273,                   /* INFEG  */
-    VRAI = 274,                    /* VRAI  */
-    FAUX = 275,                    /* FAUX  */
-    EG = 276,                      /* EG  */
-    NEG = 277,                     /* NEG  */
-    CALL = 278,                    /* CALL  */
-    NON = 279                      /* NON  */
+    SUP = 274,                     /* SUP  */
+    SUPEG = 275,                   /* SUPEG  */
+    VRAI = 276,                    /* VRAI  */
+    FAUX = 277,                    /* FAUX  */
+    EG = 278,                      /* EG  */
+    NEG = 279,                     /* NEG  */
+    CALL = 280,                    /* CALL  */
+    NON = 281                      /* NON  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -84,13 +86,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 44 "algosipro.y"
+#line 48 "algosipro.y"
 
   type_synth s;
   int integer;
   char var_name[MAX_VAR_STRLEN + 1];
 
-#line 94 "algosipro.tab.h"
+#line 96 "algosipro.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

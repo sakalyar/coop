@@ -14,10 +14,10 @@
 %%
 \\begin\{algo\}         { return DEB; } 
 \\end\{algo\}           { return FIN; }
-\\SET                   { return SET; }
-\\RETURN                { return RETURN; }
-\\DOFORI                { return DOFORI; }
 \\CALL                  { return CALL; }
+\\SET                   { return SET; }
+\\DOFORI                { return DOFORI; }
+\\RETURN                { return RETURN; }
 \\IF                    { return IF; }
 \\FI                    { return FI; }
 \\ELSE                  { return ELSE; }
@@ -27,6 +27,8 @@
 "<="                    { return INFEG; }
 "="                     { return EG; }
 "!="                    { return NEG; }
+">"                     { return SUP; }
+">="                    { return SUPEG; }
 "true"                  { return VRAI; }
 "false"                 { return FAUX; }
 "||"                    { return OU; }
@@ -41,14 +43,14 @@
 
 void string_to_int(int *r, const char *s) {
   char *p;
+  long v;
   errno = 0;
-  long long var;
-  var = strtol(s, &p, 10);
+  v = strtol(s, &p, 10);
   if ((*p != '\0' || 
-      (errno == ERANGE && (var == LONG_MIN || var == LONG_MAX))) || 
-      (var < INT_MIN || var > INT_MAX)) {
+      (errno == ERANGE && (v == LONG_MIN || v == LONG_MAX))) || 
+      (v < INT_MIN || v > INT_MAX)) {
     fprintf(stderr, "Error converting string to int\n");
     exit(EXIT_FAILURE);
   } 
-  *r = var;
+  *r = v;
 }
