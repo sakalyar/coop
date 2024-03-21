@@ -1,0 +1,104 @@
+true : Bool
+
+if true then
+  λb : Bool.
+    b
+else
+  false : Erreur de type : les branches d'un if doivent être de même type
+
+λy : Bool.
+  y : (Bool -> Bool)
+
+tru = λt : Bool.
+    λf : Bool.
+      t : (Bool -> (Bool -> Bool))
+
+fls = λt : Bool.
+    λf : Bool.
+      f : (Bool -> (Bool -> Bool))
+
+realBool = λb : (Bool -> (Bool -> Bool)).
+    b (
+      true
+    ) (
+      false
+    ) : ((Bool -> (Bool -> Bool)) -> Bool)
+
+true : Bool
+
+false : Bool
+
+cond = λb : (Bool -> (Bool -> Bool)).
+    λt : Bool.
+      λf : Bool.
+        b t f : ((Bool -> (Bool -> Bool)) -> (Bool -> (Bool -> Bool)))
+
+true : Bool
+
+churchBool = λb : Bool.
+    if b then
+      λt : Bool.
+        λf : Bool.
+          t
+    else
+      λt : Bool.
+        λf : Bool.
+          f : (Bool -> (Bool -> (Bool -> Bool)))
+
+λt : Bool.
+  λf : Bool.
+    t : (Bool -> (Bool -> Bool))
+
+λt : Bool.
+  λf : Bool.
+    f : (Bool -> (Bool -> Bool))
+
+realnat = λm : ((Nat -> Nat) -> (Nat -> Nat)).
+    m (
+      λx : Nat.
+        succ x
+    ) (
+      0
+    ) : (((Nat -> Nat) -> (Nat -> Nat)) -> Nat)
+
+c2 = λs : (Nat -> Nat).
+    λz : Nat.
+      s (
+        s z
+      ) : ((Nat -> Nat) -> (Nat -> Nat))
+
+succ succ 0 : Nat
+
+c5 = λs : (Nat -> Nat).
+    λz : Nat.
+      s (
+        s (
+          s (
+            s (
+              s z
+            )
+          )
+        )
+      ) : ((Nat -> Nat) -> (Nat -> Nat))
+
+succ succ succ succ succ 0 : Nat
+
+(
+  λx : Bool.
+    x
+) (
+  succ 0
+)  : Erreur de type : paramètres réel et formel incompatibles
+
+(
+  λm : ((Nat -> Nat) -> (Nat -> Nat)).
+    m (
+      λx : Nat.
+        succ x
+    ) (
+      0
+    )
+) (
+  0
+)  : Erreur de type : paramètres réel et formel incompatibles
+

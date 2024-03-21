@@ -1,0 +1,17 @@
+true
+
+false
+
+if true then if false then false else true else true
+
+0
+
+pred succ 0
+
+succ pred 0
+
+if true then succ succ 0 else succ 0
+
+if (iszero 0) then (if false then true else false) else iszero (succ 0)
+
+if iszero succ 0 then if false then true else false else iszero succ succ 0

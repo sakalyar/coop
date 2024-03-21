@@ -1,0 +1,44 @@
+unit : Unit
+
+unit : Unit
+
+λx : Unit.
+  λy : Unit.
+    x : (Unit -> (Unit -> Unit))
+
+0 : Nat
+
+succ 0 : Nat
+
+λy : Nat.
+  0 : (Nat -> Nat)
+
+0 : Nat
+
+true : Bool
+
+add = λm : Nat.
+    λn : Nat.
+      if iszero m then
+        n
+      else
+        fix (
+          λ_f6 : (Nat -> (Nat -> Nat)).
+            λm : Nat.
+              λn : Nat.
+                if iszero m then
+                  n
+                else
+                  _f6 (
+                    pred m
+                  ) (
+                    succ n
+                  )
+        ) (
+          pred m
+        ) (
+          succ n
+        ) : (Nat -> (Nat -> Nat))
+
+succ succ succ 0 : Nat
+

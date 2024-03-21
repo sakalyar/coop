@@ -1,0 +1,40 @@
+#### valeur unit et type Unit
+
+unit ;;
+
+(lambda x : Unit -> Unit. lambda y : Unit. x y) (lambda y : Unit. unit) unit ;;
+
+lambda x : Unit. lambda y : Unit. x ;;
+
+
+#### sequence (;)
+
+unit ; 0 ;;
+
+unit ; (lambda x: Unit. x) unit ; (lambda y: Nat. succ y) 0 ;;
+
+#### let in
+
+let x = (lambda y : Nat. 0) in x ;;
+
+let x = 0 in (unit ; 0) ;;
+
+let fctAEffetDeBord = lambda x : Nat. 
+  # instructionAEffetDeBord
+  unit
+in
+  (fctAEffetDeBord 0 ; true) ;;
+
+#### recursivite (letrec)
+
+letrec add : Nat -> Nat -> Nat =
+  lambda m : Nat.
+    lambda n : Nat.
+      if iszero m then
+        n
+      else
+        add (pred m) (succ n)
+;;
+
+add (succ 0) (succ succ 0) ;;
+

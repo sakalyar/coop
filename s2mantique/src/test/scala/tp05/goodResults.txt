@@ -1,0 +1,9 @@
+True
+False
+True
+Zero
+Zero
+Succ(Zero)
+Succ(Succ(Zero))
+False
+False
